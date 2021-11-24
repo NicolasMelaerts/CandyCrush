@@ -1,3 +1,6 @@
+run:
+	make main && ./main && rm plateau.o
+
 main: main.cpp plateau.o
 	g++ --std='c++17' -o main main.cpp plateau.o -lfltk 
 
