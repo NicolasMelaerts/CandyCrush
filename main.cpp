@@ -33,9 +33,6 @@ void init(){
 // You should draw what the use should see here
 // Every time it starts with a blank screen
 void draw(){
-    fl_font(FL_HELVETICA,75);
-    fl_color(fl_rgb_color(0,0,255));
-    fl_draw("MrBacon",0,0,windowWidth,windowHeight,FL_ALIGN_CENTER,nullptr,false); 
 }
 
 // mouseMove is called every time the mouse moves
@@ -55,19 +52,20 @@ void keyPressed(int keyCode){
 
 /* ------ DO NOT EDIT BELOW HERE (FOR NOW) ------ */
 class MainWindow : public Fl_Window {
+    Canvas c;
     public:
-    MainWindow() : Fl_Window(000, 000, windowWidth, windowHeight, "Lab 1") {
+    MainWindow() : Fl_Window(000, 000, windowWidth, windowHeight, "Candy Crush") {
         Fl::add_timeout(1.0/refreshPerSecond, Timer_CB, this);
         resizable(this);
     }
     void draw() override {
         Fl_Window::draw();
-        ::draw(); //Global draw function
+        c.draw(); //Global draw function
     }
     int handle(int event) override {
         switch (event) {
             case FL_MOVE:
-                mouseMove(Fl::event_x(),Fl::event_y());
+                c.mouseMove(Point{Fl::event_x(),Fl::event_y()});
                 return 1;
             case FL_KEYDOWN:
                 keyPressed(Fl::event_key());
