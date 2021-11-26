@@ -25,7 +25,6 @@ const double refreshPerSecond=60;
 // Init is called once a the beginning of the program
 // Do not draw anything in init
 void init(){
-    
 }
 
 
@@ -38,7 +37,6 @@ void draw(){
 // mouseMove is called every time the mouse moves
 // It is called with the current mouse position
 void mouseMove(int x, int y){
-
 }
 
 // keyPressed is called when a key is pressed
@@ -47,7 +45,7 @@ void mouseMove(int x, int y){
 // For special keys like arrow, find the key codes:
 // https://www.fltk.org/doc-1.3/enumerations.html
 void keyPressed(int keyCode){
-    exit(0);
+    if (keyCode=='q') exit(0);
 }
 
 /* ------ DO NOT EDIT BELOW HERE (FOR NOW) ------ */
@@ -69,6 +67,14 @@ class MainWindow : public Fl_Window {
                 return 1;
             case FL_KEYDOWN:
                 keyPressed(Fl::event_key());
+            case FL_Left:
+                c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
+            case FL_Right:
+                c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
+            case FL_Down:
+                c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
+            case FL_Up:
+                c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
         }
         return 0;
     }
@@ -80,6 +86,7 @@ class MainWindow : public Fl_Window {
 };
 
 int main(int argc, char *argv[]) {
+    srand(time(0));
     init();
     MainWindow window;
     window.show(argc, argv);

@@ -50,6 +50,12 @@ class Rectangle {
   Point getCenter() {
     return center;
   }
+  void setPoint(Point newC){
+    center = newC;
+  }
+  Point getPoint(){
+    return center;
+  }
 };
 
 class Bonbon{
@@ -61,6 +67,7 @@ public:
     void draw();
     void mouseMove(Point mouseLoc);
     void mouseClick(Point mouseLoc);
+    void moveBonbon(Point p, int keyCode);
 };
 
 
@@ -73,4 +80,5 @@ public:
     };
     void draw();
     void mouseMove(Point mouseLoc);
+    void moveBonbon(Point p, int keyCode);
 };

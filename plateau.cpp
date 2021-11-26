@@ -40,7 +40,7 @@ bool Rectangle::contains(Point p) {
 
 
 Bonbon::Bonbon(Point center, int w, int h):
-r(center,w,h,FL_BLACK, FL_WHITE){}
+r{center,w,h,FL_BLACK, FL_WHITE}{}
 
 void Bonbon::draw(){
   r.draw();
@@ -58,6 +58,14 @@ void Bonbon::mouseMove(Point mouseLoc){
   }
 }
 
+void Bonbon::moveBonbon(Point p, int keyCode){
+    if (r.contains(p)){
+      if (keyCode==65362){cout << "Up"; r.setPoint({r.getPoint().x, r.getPoint().y-50});}
+      if (keyCode==65361){cout << "Left"; r.setPoint({r.getPoint().x+50, r.getPoint().y});}
+      if (keyCode==65363){cout << "Right"; r.setPoint({r.getPoint().x-50, r.getPoint().y});}
+      if (keyCode==65364){cout << "Down"; r.setPoint({r.getPoint().x, r.getPoint().y+50});}
+  }
+}
 
 void Canvas::initialize(){
   for (int x=0; x<9;x++){
@@ -77,4 +85,10 @@ void Canvas::mouseMove(Point mouseLoc) {
   for (auto &v: bonbons)
     for (auto &c: v)
       c.mouseMove(mouseLoc);
+}
+
+void Canvas::moveBonbon(Point p, int keyCode) {
+  for (auto &v: bonbons)
+    for (auto &c: v)
+      c.moveBonbon(p, keyCode);
 }
