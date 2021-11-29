@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 #include "plateau.hpp"
+#include "jeu.hpp"
 
 using namespace std;
 

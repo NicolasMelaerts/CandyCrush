@@ -20,7 +20,7 @@ Rectangle::Rectangle(Point center, int w, int h, Fl_Color frameColor, Fl_Color f
 
 void Rectangle::draw() {
   fl_draw_box(FL_FLAT_BOX, center.x-w/2, center.y-h/2, w, h, fillColor);
-  fl_draw_box(FL_BORDER_FRAME, center.x-w/2, center.y-h/2, w, h, frameColor);
+  fl_draw_box(FL_BORDER_FRAME, center.x-w/2, center.y-h/2, w+1, h+1, frameColor);
 }
 
 void Rectangle::setFillColor(Fl_Color newFillColor) {
@@ -40,7 +40,7 @@ bool Rectangle::contains(Point p) {
 
 
 Bonbon::Bonbon(Point center, int w, int h):
-r{center,w,h,FL_BLACK, FL_WHITE}{}
+r{center,w,h,FL_BLACK, FL_WHITE}{r.setFillColor(c), r.setFrameColor(c);}
 
 void Bonbon::draw(){
   r.draw();
@@ -54,23 +54,27 @@ void Bonbon::mouseClick(Point mouseLoc){
 
 void Bonbon::mouseMove(Point mouseLoc){
     if (r.contains(mouseLoc)){
-    r.setFrameColor(FL_YELLOW);
-  }
+      if (c==216 or c==88){
+        r.setFrameColor(FL_WHITE);
+      } else {
+    r.setFrameColor(FL_BLACK);}
+    } else { r.setFrameColor(c);}
+
 }
 
 void Bonbon::moveBonbon(Point p, int keyCode){
     if (r.contains(p)){
-      if (keyCode==65362){cout << "Up"; r.setPoint({r.getPoint().x, r.getPoint().y-50});}
-      if (keyCode==65361){cout << "Left"; r.setPoint({r.getPoint().x+50, r.getPoint().y});}
-      if (keyCode==65363){cout << "Right"; r.setPoint({r.getPoint().x-50, r.getPoint().y});}
-      if (keyCode==65364){cout << "Down"; r.setPoint({r.getPoint().x, r.getPoint().y+50});}
+      if (keyCode==65362){r.setPoint({r.getPoint().x, r.getPoint().y-50});} //up
+      if (keyCode==65361){r.setPoint({r.getPoint().x-50, r.getPoint().y});} //Left
+      if (keyCode==65363){r.setPoint({r.getPoint().x+50, r.getPoint().y});} //Right
+      if (keyCode==65364){r.setPoint({r.getPoint().x, r.getPoint().y+50});} //Down
   }
 }
 
 void Canvas::initialize(){
   for (int x=0; x<9;x++){
     bonbons.push_back({});
-    for (int y=0; y<9; y++) bonbons[x].push_back({{50*x+25, 50*y+25}, 40, 40});
+    for (int y=0; y<9; y++) bonbons[x].push_back({{50*x+48, 50*y+70}, 40, 40});
   }
 }
 

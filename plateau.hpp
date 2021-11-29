@@ -60,7 +60,8 @@ class Rectangle {
 
 class Bonbon{
     Rectangle r;
-    vector<Fl_Color > Colors{FL_BLACK, FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA, FL_WHITE,FL_YELLOW};
+    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, fl_rgb_color(251, 139, 35)};
+    Fl_Color c = Colors[rand()%6];
     bool is_Selectionned = false;
 public:
     Bonbon(Point center, int w, int h);
