@@ -76,3 +76,7 @@ void jeu::afficher_plateau_de_jeu(){
         cout << endl;
     }
 }
+
+void jeu::echange(coord a, coord b){
+    swap(plateau[a.i][a.j], plateau[b.i][b.j]);
+}

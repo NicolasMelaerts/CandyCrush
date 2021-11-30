@@ -1,17 +1,5 @@
-#include <FL/Fl.H>
-#include <FL/fl_draw.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Box.H>
-#include <string>
-#include <math.h>
-#include <time.h>
-#include <chrono>
-#include <vector>
-#include <iostream>
-#include <random>
-#include <array>
-
 #include "plateau.hpp"
+
 
 using namespace std;
 
@@ -39,8 +27,8 @@ bool Rectangle::contains(Point p) {
 }
 
 
-Bonbon::Bonbon(Point center, int w, int h):
-r{center,w,h,FL_BLACK, FL_WHITE}{r.setFillColor(c), r.setFrameColor(c);}
+Bonbon::Bonbon(Point center, int w, int h, Fl_Color FrameColor, Fl_Color FillColor):
+r{center,w,h,FillColor, FrameColor}{FrameColor=r.getFrameColor(); FillColor=r.getFillColor();}
 
 void Bonbon::draw(){
   r.draw();
@@ -54,11 +42,15 @@ void Bonbon::mouseClick(Point mouseLoc){
 
 void Bonbon::mouseMove(Point mouseLoc){
     if (r.contains(mouseLoc)){
-      if (c==216 or c==88){
+      if (FrameColor == 88 or FrameColor == 216 or FrameColor == 248){
         r.setFrameColor(FL_WHITE);
-      } else {
-    r.setFrameColor(FL_BLACK);}
-    } else { r.setFrameColor(c);}
+      } else{
+        r.setFrameColor(FL_BLACK);
+      }
+    }
+    else{
+      r.setFrameColor(FrameColor);
+    }
 
 }
 
@@ -71,10 +63,16 @@ void Bonbon::moveBonbon(Point p, int keyCode){
   }
 }
 
+Mur::Mur(Point center, int w, int h):
+r{center, w, h, FL_BLACK, FL_BLACK}{}
+
+
 void Canvas::initialize(){
-  for (int x=0; x<9;x++){
+  for (int x=0; x<j.get_taille_plateau();x++){
     bonbons.push_back({});
-    for (int y=0; y<9; y++) bonbons[x].push_back({{50*x+48, 50*y+70}, 40, 40});
+    for (int y=0; y<j.get_taille_plateau(); y++) {
+      bonbons[x].push_back({{50*x+48, 50*y+70}, 40, 40, Colors[j.getelemplateau(x,y)], Colors[j.getelemplateau(x,y)]});
+    }
   }
 }
 

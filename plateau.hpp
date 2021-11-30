@@ -11,6 +11,8 @@
 #include <random>
 #include <array>
 
+#include "jeu.hpp"
+
 using namespace std;
 
 struct Point {
@@ -60,21 +62,29 @@ class Rectangle {
 
 class Bonbon{
     Rectangle r;
-    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, fl_rgb_color(251, 139, 35)};
-    Fl_Color c = Colors[rand()%6];
+    Fl_Color FrameColor= r.getFrameColor();
+    Fl_Color FillColor= r.getFillColor();
     bool is_Selectionned = false;
 public:
-    Bonbon(Point center, int w, int h);
+    Bonbon(Point center, int w, int h, Fl_Color FrameColor, Fl_Color FillColor);
     void draw();
     void mouseMove(Point mouseLoc);
     void mouseClick(Point mouseLoc);
     void moveBonbon(Point p, int keyCode);
 };
 
+class Mur{
+  Rectangle r;
+public:
+  Mur(Point center, int w, int h);
+};
+
 
 class Canvas{
     vector< vector<Bonbon> > bonbons;
+    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, fl_rgb_color(251, 139, 35)};
     void initialize();
+    jeu j;
 public:
     Canvas(){
         initialize();
@@ -83,3 +93,8 @@ public:
     void mouseMove(Point mouseLoc);
     void moveBonbon(Point p, int keyCode);
 };
+
+
+// Pour que murs et bonbons hérite de cette classe et pouvoir 
+// stocker des éléments de même type dans le vecteur plateau
+class ElementDeJeu{};
