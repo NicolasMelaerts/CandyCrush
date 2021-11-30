@@ -11,9 +11,20 @@ using namespace std;
 
 class jeu{
 private:
-    /* data */
+    vector<vector<int> > plateau;
+    int taille_plateau = 9;
+    int nb_couleurs_bonbon = 6;
+    void initialize();
 public:
-    jeu(){cout << "ouf";};
+    jeu(){initialize();};
+    void check_lines();
+    void check_rows();
+    void fall();
+    void afficher_plateau_de_jeu();
+    void search_combinaison();
+
+    void melanger();    // si pas la poss de faire une combi de 3 bonbons
+    void swap();
 };
 
 

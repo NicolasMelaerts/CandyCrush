@@ -26,6 +26,14 @@ const double refreshPerSecond=60;
 // Init is called once a the beginning of the program
 // Do not draw anything in init
 void init(){
+    jeu j;
+    j.afficher_plateau_de_jeu();
+    cout << endl;
+    j.search_combinaison();
+    j.afficher_plateau_de_jeu();
+    j.fall();
+    cout << "Fall" << endl;
+    j.afficher_plateau_de_jeu();
 }
 
 
