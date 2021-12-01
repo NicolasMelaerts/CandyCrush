@@ -78,5 +78,8 @@ void jeu::afficher_plateau_de_jeu(){
 }
 
 void jeu::echange(coord a, coord b){
+    afficher_plateau_de_jeu();
     swap(plateau[a.i][a.j], plateau[b.i][b.j]);
+    cout <<"-----" << endl;
+    afficher_plateau_de_jeu();
 }

@@ -27,34 +27,31 @@ bool Rectangle::contains(Point p) {
 }
 
 
-Bonbon::Bonbon(Point center, int w, int h, Fl_Color FrameColor, Fl_Color FillColor):
-r{center,w,h,FillColor, FrameColor}{FrameColor=r.getFrameColor(); FillColor=r.getFillColor();}
+Bonbon::Bonbon(Point center, int w, int h, Fl_Color BonbonColor):
+r{center,w,h,BonbonColor, BonbonColor}{this->BonbonColor=BonbonColor;}
 
 void Bonbon::draw(){
   r.draw();
 }
 
 void Bonbon::mouseClick(Point mouseLoc){
-  if (r.contains(mouseLoc)){
-    r.setFillColor(FL_DARK_RED);
-  }
 }
 
 void Bonbon::mouseMove(Point mouseLoc){
     if (r.contains(mouseLoc)){
-      if (FrameColor == 88 or FrameColor == 216 or FrameColor == 248){
+      if (r.getFillColor() == 88 or r.getFillColor() == 216 or r.getFillColor() == 248){
         r.setFrameColor(FL_WHITE);
       } else{
         r.setFrameColor(FL_BLACK);
       }
     }
     else{
-      r.setFrameColor(FrameColor);
+      r.setFrameColor(r.getFillColor());
     }
 
 }
 
-void Bonbon::moveBonbon(Point p, int keyCode){
+void Bonbon::moveBonbon(Point p, int keyCode, jeu j,vector< vector<Bonbon> > bonbons){
     if (r.contains(p)){
       if (keyCode==65362){r.setPoint({r.getPoint().x, r.getPoint().y-50});} //up
       if (keyCode==65361){r.setPoint({r.getPoint().x-50, r.getPoint().y});} //Left
@@ -68,12 +65,14 @@ r{center, w, h, FL_BLACK, FL_BLACK}{}
 
 
 void Canvas::initialize(){
+  bonbons.clear();
   for (int x=0; x<j.get_taille_plateau();x++){
     bonbons.push_back({});
     for (int y=0; y<j.get_taille_plateau(); y++) {
-      bonbons[x].push_back({{50*x+48, 50*y+70}, 40, 40, Colors[j.getelemplateau(x,y)], Colors[j.getelemplateau(x,y)]});
+      bonbons[x].push_back({{50*x+48, 50*y+70}, 40, 40, Colors[j.getelemplateau(x,y)]});
     }
   }
+  afficherCanvas();
 }
 
 void Canvas::draw(){
@@ -92,5 +91,8 @@ void Canvas::mouseMove(Point mouseLoc) {
 void Canvas::moveBonbon(Point p, int keyCode) {
   for (auto &v: bonbons)
     for (auto &c: v)
-      c.moveBonbon(p, keyCode);
+      c.moveBonbon(p, keyCode, j, bonbons);
+  cout << endl;
+  afficherCanvas();
+  
 }
