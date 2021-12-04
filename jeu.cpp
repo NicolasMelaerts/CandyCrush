@@ -1,22 +1,23 @@
 #include "jeu.hpp"
 
-void jeu::initialize(){
+void jeu::start(){
     for (int i=0; i<taille_plateau; i++){
         plateau.push_back({});
         for (int j=0; j<taille_plateau; j++){
             plateau[i].push_back(rand()%nb_couleurs_bonbon);
         }
     }
+    search_combinaison();
 }
 
 void jeu::check_lines(){
     cout << "check_lines" << endl;
-    for (int i=1; i<taille_plateau+1; i++){
+    for (int i=8; i>=0; i--){
         for (int j=0; j<taille_plateau-2; j++){
-            if (plateau[taille_plateau-i][j] == plateau[taille_plateau-i][j+1] && plateau[taille_plateau-i][j] == plateau[taille_plateau-i][j+2]){ // si a = b et a = c alors b = c
-                plateau[taille_plateau-i][j] = -1;
-                plateau[taille_plateau-i][j+1] = -1;
-                plateau[taille_plateau-i][j+2] = -1;
+            if (plateau[i][j] == plateau[i][j+1] && plateau[i][j] == plateau[i][j+2]){ // si a = b et a = c alors b = c
+                plateau[i][j] = -1;
+                plateau[i][j+1] = -1;
+                plateau[i][j+2] = -1;
                 break;
             }
         }
@@ -40,8 +41,6 @@ void jeu::check_rows(){
 void jeu::search_combinaison(){
     vector<vector<int >> ancien_plateau;
     while (ancien_plateau != plateau){
-        afficher_plateau_de_jeu();
-        cout << endl;
         ancien_plateau = plateau;
         check_rows();
         check_lines();
@@ -57,7 +56,6 @@ void jeu::fall(){
                 col.push_back(plateau[j][i]);
             }
         }
-        cout << "size" << col.size()<< "  " << endl;;
         while (col.size()!=taille_plateau){
             col.push_back(rand()%nb_couleurs_bonbon); 
         }
@@ -75,11 +73,11 @@ void jeu::afficher_plateau_de_jeu(){
         }
         cout << endl;
     }
+    cout << endl;
 }
 
 void jeu::echange(coord a, coord b){
     afficher_plateau_de_jeu();
     swap(plateau[a.i][a.j], plateau[b.i][b.j]);
-    cout <<"-----" << endl;
     afficher_plateau_de_jeu();
 }

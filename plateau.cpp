@@ -27,8 +27,8 @@ bool Rectangle::contains(Point p) {
 }
 
 
-Bonbon::Bonbon(Point center, int w, int h, Fl_Color BonbonColor):
-r{center,w,h,BonbonColor, BonbonColor}{this->BonbonColor=BonbonColor;}
+Bonbon::Bonbon(Point center, int w, int h, Fl_Color BonbonColor, Point PosPlateau):
+r{center,w,h,BonbonColor, BonbonColor}{this->BonbonColor=BonbonColor; this->PosPlateau=PosPlateau;}
 
 void Bonbon::draw(){
   r.draw();
@@ -51,28 +51,21 @@ void Bonbon::mouseMove(Point mouseLoc){
 
 }
 
-void Bonbon::moveBonbon(Point p, int keyCode, jeu j,vector< vector<Bonbon> > bonbons){
-    if (r.contains(p)){
-      if (keyCode==65362){r.setPoint({r.getPoint().x, r.getPoint().y-50});} //up
-      if (keyCode==65361){r.setPoint({r.getPoint().x-50, r.getPoint().y});} //Left
-      if (keyCode==65363){r.setPoint({r.getPoint().x+50, r.getPoint().y});} //Right
-      if (keyCode==65364){r.setPoint({r.getPoint().x, r.getPoint().y+50});} //Down
-  }
-}
 
 Mur::Mur(Point center, int w, int h):
 r{center, w, h, FL_BLACK, FL_BLACK}{}
 
 
 void Canvas::initialize(){
+  j.afficher_plateau_de_jeu();
   bonbons.clear();
   for (int x=0; x<j.get_taille_plateau();x++){
     bonbons.push_back({});
     for (int y=0; y<j.get_taille_plateau(); y++) {
-      bonbons[x].push_back({{50*x+48, 50*y+70}, 40, 40, Colors[j.getelemplateau(x,y)]});
+      bonbons[x].push_back({{50*y+48, 50*x+70}, 40, 40, Colors[j.getelemplateau(x,y)], {x,y}});
     }
   }
-  afficherCanvas();
+  //afficherCanvas();
 }
 
 void Canvas::draw(){
@@ -86,13 +79,81 @@ void Canvas::mouseMove(Point mouseLoc) {
   for (auto &v: bonbons)
     for (auto &c: v)
       c.mouseMove(mouseLoc);
+      
 }
 
 void Canvas::moveBonbon(Point p, int keyCode) {
-  for (auto &v: bonbons)
-    for (auto &c: v)
-      c.moveBonbon(p, keyCode, j, bonbons);
-  cout << endl;
-  afficherCanvas();
-  
+  for (auto &v: bonbons){
+    for (auto &c: v){
+      Point posplat{c.getPosPlat(p)};
+      if (keyCode==65362 && posplat.x != -1){ //up
+        if (posplat.x != 0){
+          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x-1][posplat.y].getPoint());
+          bonbons[posplat.x-1][posplat.y].setPoint(psave);
+          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x-1, posplat.y});
+          bonbons[posplat.x-1][posplat.y].setPosPlat({posplat.x, posplat.y});
+          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x-1][posplat.y]);
+
+          j.echange({posplat.x,posplat.y}, {posplat.x-1,posplat.y});
+          j.search_combinaison();
+          initialize();
+        }
+      } 
+      if (keyCode==65361 && posplat.x != -1){ //Left
+        if (posplat.y != 0){
+          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x][posplat.y-1].getPoint());
+          bonbons[posplat.x][posplat.y-1].setPoint(psave);
+          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x, posplat.y-1});
+          bonbons[posplat.x][posplat.y-1].setPosPlat({posplat.x, posplat.y});
+          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x][posplat.y-1]);
+
+          j.echange({posplat.x,posplat.y}, {posplat.x,posplat.y-1});
+          j.search_combinaison();
+          initialize();
+        }
+      }
+      if (keyCode==65363 && posplat.x != -1){ //Right 
+        if (posplat.y != 8){
+          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x][posplat.y+1].getPoint());
+          bonbons[posplat.x][posplat.y+1].setPoint(psave);
+          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x, posplat.y+1});
+          bonbons[posplat.x][posplat.y+1].setPosPlat({posplat.x, posplat.y});
+          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x][posplat.y+1]);
+          
+          j.echange({posplat.x,posplat.y}, {posplat.x,posplat.y+1});
+          j.search_combinaison();
+          initialize();
+        }
+      }
+      if (keyCode==65364  && posplat.x != -1){ //Down
+        if (posplat.x != 8){
+          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x+1][posplat.y].getPoint());
+          bonbons[posplat.x+1][posplat.y].setPoint(psave);
+          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x+1, posplat.y});
+          bonbons[posplat.x+1][posplat.y].setPosPlat({posplat.x, posplat.y});
+          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x+1][posplat.y]);
+
+          j.echange({posplat.x,posplat.y}, {posplat.x+1,posplat.y});
+          j.search_combinaison();
+          initialize();
+        }
+      } 
+    }
+  } 
 }
+
+
+
+/*
+          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x][posplat.y-1].getPoint());
+          bonbons[posplat.x][posplat.y-1].setPoint(psave);
+          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x, posplat.y-1});
+          bonbons[posplat.x][posplat.y-1].setPosPlat({posplat.x, posplat.y});
+          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x][posplat.y-1]);
+          j.echange({posplat.x,posplat.y}, {posplat.x,posplat.y-1});
+*/

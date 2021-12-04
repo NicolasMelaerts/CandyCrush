@@ -13,8 +13,8 @@ class jeu{
 private:
     vector<vector<int> > plateau;
     int taille_plateau = 9;
-    int nb_couleurs_bonbon = 6;
-    void initialize();
+    int nb_couleurs_bonbon = 7;
+    void start();
     struct coord{
         int i;
         int j;
@@ -22,7 +22,7 @@ private:
     
     
 public:
-    jeu(){initialize();};
+    jeu(){start();};
     void check_lines();
     void check_rows();
     void fall();

@@ -15,9 +15,11 @@
 
 using namespace std;
 
-struct Point {
+struct Point{
     int x,y;
 };
+
+
 
 class Rectangle {
   Point center;
@@ -63,9 +65,10 @@ class Rectangle {
 class Bonbon{
     Rectangle r;
     Fl_Color BonbonColor;
-    bool is_Selectionned = false;
+    
 public:
-    Bonbon(Point center, int w, int h, Fl_Color BonbonColor);
+    Point PosPlateau;
+    Bonbon(Point center, int w, int h, Fl_Color BonbonColor, Point PosPlateau);
     void draw();
     void mouseMove(Point mouseLoc);
     void mouseClick(Point mouseLoc);
@@ -73,6 +76,27 @@ public:
     Fl_Color getBonbonColor(){
       return BonbonColor;
     }
+    void setPoint(Point newP){
+      r.setPoint(newP);
+    }
+
+    Point getPoint(){
+      return r.getPoint();
+    }
+
+    Point getPosPlat(Point mouseLoc){
+      if (r.contains(mouseLoc)){
+        return PosPlateau;
+      }
+      return {-1, -1};
+    }
+
+    void setPosPlat(Point newP){
+      PosPlateau = newP;
+    }
+
+
+
 };
 
 class Mur{
@@ -84,7 +108,7 @@ public:
 
 class Canvas{
     vector< vector<Bonbon> > bonbons;
-    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, FL_CYAN}; // orange = fl_rgb_color(251, 139, 35)
+    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, FL_CYAN, fl_rgb_color(251, 139, 35)};
     void initialize();
     jeu j;
 public:
@@ -97,15 +121,16 @@ public:
     void afficherCanvas(){
       for (int i=0; i<9; i++){
         for (int j=0; j<9; j++){
-            if (bonbons[j][i].getBonbonColor() == 88){cout << "R ,";}
-            if (bonbons[j][i].getBonbonColor() == 63){cout << "G ,";}
-            if (bonbons[j][i].getBonbonColor() == 95){cout << "Y ,";}
-            if (bonbons[j][i].getBonbonColor() == 216){cout << "B ,";}
-            if (bonbons[j][i].getBonbonColor() == 248){cout << "M ,";}
-            if (bonbons[j][i].getBonbonColor() == 223){cout << "C ,";}
+            if (bonbons[i][j].getBonbonColor() == 88){cout << "R ,";}
+            if (bonbons[i][j].getBonbonColor() == 63){cout << "G ,";}
+            if (bonbons[i][j].getBonbonColor() == 95){cout << "Y ,";}
+            if (bonbons[i][j].getBonbonColor() == 216){cout << "B ,";}
+            if (bonbons[i][j].getBonbonColor() == 248){cout << "M ,";}
+            if (bonbons[i][j].getBonbonColor() == 223){cout << "C ,";}
         }
         cout << endl;
     }
+    cout << endl;
     }
 };
 
