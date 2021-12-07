@@ -80,7 +80,7 @@ class MainWindow : public Fl_Window {
 };
 
 int main(int argc, char *argv[]) {
-    srand(time(0));
+    //srand(time(0));
     init();
     MainWindow window;
     window.show(argc, argv);

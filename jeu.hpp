@@ -28,6 +28,12 @@ public:
     void fall();
     void afficher_plateau_de_jeu();
     void search_combinaison();
+    vector<vector<int> > get_plateau(){
+        return plateau;
+    }
+    void set_plateau(vector<vector<int> > newPlateau){
+        plateau = newPlateau;
+    }
 
     int get_taille_plateau(){
         return taille_plateau;
@@ -43,6 +49,7 @@ public:
 
     void melanger();    // si pas la poss de faire une combi de 3 bonbons
     void echange(coord a, coord b);
+    bool coup_possible(coord a, coord b);
 };
 
 

@@ -15,8 +15,16 @@ void Rectangle::setFillColor(Fl_Color newFillColor) {
   fillColor = newFillColor;
 }
 
+Fl_Color Rectangle::getFillColor(){
+  return fillColor;
+}
+
 void Rectangle::setFrameColor(Fl_Color newFrameColor) {
   frameColor = newFrameColor;
+}
+
+Fl_Color Rectangle::getFrameColor(){
+  return frameColor;
 }
 
 bool Rectangle::contains(Point p) {
@@ -65,7 +73,6 @@ void Canvas::initialize(){
       bonbons[x].push_back({{50*y+48, 50*x+70}, 40, 40, Colors[j.getelemplateau(x,y)], {x,y}});
     }
   }
-  //afficherCanvas();
 }
 
 void Canvas::draw(){
@@ -85,75 +92,80 @@ void Canvas::mouseMove(Point mouseLoc) {
 void Canvas::moveBonbon(Point p, int keyCode) {
   for (auto &v: bonbons){
     for (auto &c: v){
-      Point posplat{c.getPosPlat(p)};
-      if (keyCode==65362 && posplat.x != -1){ //up
-        if (posplat.x != 0){
-          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
-          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x-1][posplat.y].getPoint());
-          bonbons[posplat.x-1][posplat.y].setPoint(psave);
-          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x-1, posplat.y});
-          bonbons[posplat.x-1][posplat.y].setPosPlat({posplat.x, posplat.y});
-          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x-1][posplat.y]);
+      Point posplat{c.getPosPlatContain(p)};
+      Point decalage{0,0};
+      if (posplat.x != -1){
+        if (keyCode == 65362){decalage.x = -1;} //up
+        if (keyCode == 65361){decalage.y = -1;} //left
+        if (keyCode == 65363){decalage.y = 1;} // right
+        if (keyCode == 65364){decalage.x = 1;} // down
 
-          j.echange({posplat.x,posplat.y}, {posplat.x-1,posplat.y});
-          j.search_combinaison();
-          initialize();
-        }
-      } 
-      if (keyCode==65361 && posplat.x != -1){ //Left
-        if (posplat.y != 0){
-          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
-          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x][posplat.y-1].getPoint());
-          bonbons[posplat.x][posplat.y-1].setPoint(psave);
-          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x, posplat.y-1});
-          bonbons[posplat.x][posplat.y-1].setPosPlat({posplat.x, posplat.y});
-          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x][posplat.y-1]);
+        
 
-          j.echange({posplat.x,posplat.y}, {posplat.x,posplat.y-1});
-          j.search_combinaison();
-          initialize();
+        if ((posplat.x>0 && decalage.x == -1) || (posplat.x<8 && decalage.x == 1) || (posplat.y>0 && decalage.y == -1) || (posplat.y < 8 && decalage.y == 1)){
+          //cout << "YESSSSS = " << j.coup_possible({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y});
+          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x+decalage.x][posplat.y+decalage.y].getPoint());
+          bonbons[posplat.x+decalage.x][posplat.y+decalage.y].setPoint(psave);
+          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x+decalage.x, posplat.y+decalage.y});
+          bonbons[posplat.x+decalage.x][posplat.y+decalage.y].setPosPlat({posplat.x, posplat.y});
+          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x+decalage.x][posplat.y+decalage.y]);
+
+          j.echange({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y});
+
+          maj_canvas();
         }
       }
-      if (keyCode==65363 && posplat.x != -1){ //Right 
-        if (posplat.y != 8){
-          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
-          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x][posplat.y+1].getPoint());
-          bonbons[posplat.x][posplat.y+1].setPoint(psave);
-          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x, posplat.y+1});
-          bonbons[posplat.x][posplat.y+1].setPosPlat({posplat.x, posplat.y});
-          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x][posplat.y+1]);
-          
-          j.echange({posplat.x,posplat.y}, {posplat.x,posplat.y+1});
-          j.search_combinaison();
-          initialize();
-        }
-      }
-      if (keyCode==65364  && posplat.x != -1){ //Down
-        if (posplat.x != 8){
-          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
-          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x+1][posplat.y].getPoint());
-          bonbons[posplat.x+1][posplat.y].setPoint(psave);
-          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x+1, posplat.y});
-          bonbons[posplat.x+1][posplat.y].setPosPlat({posplat.x, posplat.y});
-          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x+1][posplat.y]);
-
-          j.echange({posplat.x,posplat.y}, {posplat.x+1,posplat.y});
-          j.search_combinaison();
-          initialize();
-        }
-      } 
     }
-  } 
+  }
 }
 
+void Canvas::maj_canvas(){
+    vector<vector<int >> ancien_plateau;
+    while (ancien_plateau != j.get_plateau()){
+        ancien_plateau = j.get_plateau();
+        j.check_rows();
+        j.check_lines();
+        fall();
+    }
 
+}
 
-/*
-          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
-          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x][posplat.y-1].getPoint());
-          bonbons[posplat.x][posplat.y-1].setPoint(psave);
-          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x, posplat.y-1});
-          bonbons[posplat.x][posplat.y-1].setPosPlat({posplat.x, posplat.y});
-          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x][posplat.y-1]);
-          j.echange({posplat.x,posplat.y}, {posplat.x,posplat.y-1});
-*/
+void Canvas::fall(){
+  vector<vector<int> > plateau = j.get_plateau();
+  j.fall();
+
+  int to_fall=0;
+
+  cout << "FALLLLLLLL" << endl;
+
+  for (int i=0; i<j.get_taille_plateau(); i++){
+    for (int k=0; k<9; k++){
+      if (plateau[k][i] != -1){
+        to_fall++;
+      } else{
+        for (int l=0; l<to_fall; l++){
+          cout << "TOUR DE BOUCLE" << endl;
+          afficherCanvas();
+          bonbons[k-l][i] = bonbons[k-l-1][i];
+          afficherCanvas();
+          
+          bonbons[k-l][i].setPosPlat({k-l,i});
+          afficherCanvas();
+
+          bonbons[k-l][i].setPoint({50*i+48, 50*(k-l)+70});
+          
+        }
+      }
+      
+    }
+    cout << to_fall << endl;
+    for (int l=0; l<(j.get_taille_plateau()-to_fall); l++){
+      bonbons[l][i] = {{50*i+48, 50*l+70}, 40, 40, Colors[j.getelemplateau(l,i)], {l,i}};
+    }
+    to_fall = 0;
+  }
+  afficherCanvas();
+  j.afficher_plateau_de_jeu();
+
+}

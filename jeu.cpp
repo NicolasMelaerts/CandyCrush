@@ -18,7 +18,6 @@ void jeu::check_lines(){
                 plateau[i][j] = -1;
                 plateau[i][j+1] = -1;
                 plateau[i][j+2] = -1;
-                break;
             }
         }
     }
@@ -32,7 +31,6 @@ void jeu::check_rows(){
                 plateau[j][taille_plateau-i] = -1;
                 plateau[j+1][taille_plateau-i] = -1;
                 plateau[j+2][taille_plateau-i] = -1;
-                break;
             }
         }
     }
@@ -50,7 +48,7 @@ void jeu::search_combinaison(){
 
 void jeu::fall(){
     vector<int> col;
-    for (int i=taille_plateau-1; i>=0; i--){
+    for (int i=0; i<taille_plateau; i++){
         for (int j=taille_plateau-1; j>=0; j--){
             if (plateau[j][i]!=-1){
                 col.push_back(plateau[j][i]);
@@ -69,7 +67,13 @@ void jeu::fall(){
 void jeu::afficher_plateau_de_jeu(){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
-            cout << plateau[i][j] << " ,";
+            if (plateau[i][j] == 0){cout << "B ,";}
+            if (plateau[i][j] == 1){cout << "G ,";}
+            if (plateau[i][j] == 4){cout << "Y ,";}
+            if (plateau[i][j] == 2){cout << "R ,";}
+            if (plateau[i][j] == 5){cout << "C ,";}
+            if (plateau[i][j] == 3){cout << "M ,";}
+            if (plateau[i][j] == 6){cout << "O ,";}
         }
         cout << endl;
     }
@@ -77,7 +81,20 @@ void jeu::afficher_plateau_de_jeu(){
 }
 
 void jeu::echange(coord a, coord b){
-    afficher_plateau_de_jeu();
     swap(plateau[a.i][a.j], plateau[b.i][b.j]);
-    afficher_plateau_de_jeu();
+}
+
+bool jeu::coup_possible(coord a, coord b){
+    vector<vector<int >> test_plateau;
+    swap(test_plateau[a.i][a.j], test_plateau[b.i][b.j]);
+    check_lines();
+    check_rows();
+    for (auto &l: test_plateau){
+        for (auto &i: l){
+            if (i==-1){
+                return false;
+            }
+        }
+    }
+    return true;
 }
