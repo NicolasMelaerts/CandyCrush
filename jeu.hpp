@@ -13,7 +13,7 @@ class jeu{
 private:
     vector<vector<int> > plateau;
     int taille_plateau = 9;
-    int nb_couleurs_bonbon = 7;
+    int nb_couleurs_bonbon = 6;
     void start();
     struct coord{
         int i;
@@ -23,8 +23,9 @@ private:
     
 public:
     jeu(){start();};
-    void check_lines();
-    void check_rows();
+
+    vector<vector<int> > check_lines(vector<vector<int> > plat);
+    vector<vector<int> > check_rows(vector<vector<int> > plat);
     void fall();
     void afficher_plateau_de_jeu();
     void search_combinaison();
@@ -49,6 +50,7 @@ public:
 
     void melanger();    // si pas la poss de faire une combi de 3 bonbons
     void echange(coord a, coord b);
+    
     bool coup_possible(coord a, coord b);
 };
 

@@ -103,17 +103,20 @@ void Canvas::moveBonbon(Point p, int keyCode) {
         
 
         if ((posplat.x>0 && decalage.x == -1) || (posplat.x<8 && decalage.x == 1) || (posplat.y>0 && decalage.y == -1) || (posplat.y < 8 && decalage.y == 1)){
-          //cout << "YESSSSS = " << j.coup_possible({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y});
-          Point psave{bonbons[posplat.x][posplat.y].getPoint()};
-          bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x+decalage.x][posplat.y+decalage.y].getPoint());
-          bonbons[posplat.x+decalage.x][posplat.y+decalage.y].setPoint(psave);
-          bonbons[posplat.x][posplat.y].setPosPlat({posplat.x+decalage.x, posplat.y+decalage.y});
-          bonbons[posplat.x+decalage.x][posplat.y+decalage.y].setPosPlat({posplat.x, posplat.y});
-          swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x+decalage.x][posplat.y+decalage.y]);
+          if (j.coup_possible({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y})){
+            Point psave{bonbons[posplat.x][posplat.y].getPoint()};
+            bonbons[posplat.x][posplat.y].setPoint(bonbons[posplat.x+decalage.x][posplat.y+decalage.y].getPoint());
+            bonbons[posplat.x+decalage.x][posplat.y+decalage.y].setPoint(psave);
+            bonbons[posplat.x][posplat.y].setPosPlat({posplat.x+decalage.x, posplat.y+decalage.y});
+            bonbons[posplat.x+decalage.x][posplat.y+decalage.y].setPosPlat({posplat.x, posplat.y});
+            swap(bonbons[posplat.x][posplat.y], bonbons[posplat.x+decalage.x][posplat.y+decalage.y]);
 
-          j.echange({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y});
+            j.echange({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y});
 
-          maj_canvas();
+            maj_canvas();
+          } else {
+            cout << "COUP IMPOSSIBLE NE FORME PAS UNE COMBINAISON" << endl;
+          }
         }
       }
     }
@@ -124,8 +127,8 @@ void Canvas::maj_canvas(){
     vector<vector<int >> ancien_plateau;
     while (ancien_plateau != j.get_plateau()){
         ancien_plateau = j.get_plateau();
-        j.check_rows();
-        j.check_lines();
+        j.set_plateau(j.check_rows(j.get_plateau()));
+        j.set_plateau(j.check_lines(j.get_plateau()));
         fall();
     }
 

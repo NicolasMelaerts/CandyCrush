@@ -106,7 +106,7 @@ public:
 
 class Canvas{
     vector< vector<Bonbon> > bonbons;
-    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, FL_CYAN, fl_rgb_color(251, 139, 35)};
+    vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, fl_rgb_color(251, 139, 35)};
     void initialize();
     jeu j;
 public:

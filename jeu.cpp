@@ -10,38 +10,40 @@ void jeu::start(){
     search_combinaison();
 }
 
-void jeu::check_lines(){
+vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
     cout << "check_lines" << endl;
-    for (int i=8; i>=0; i--){
+    for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
-            if (plateau[i][j] == plateau[i][j+1] && plateau[i][j] == plateau[i][j+2]){ // si a = b et a = c alors b = c
-                plateau[i][j] = -1;
-                plateau[i][j+1] = -1;
-                plateau[i][j+2] = -1;
+            if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]){ // si a = b et a = c alors b = c
+                plat[i][j] = -1;
+                plat[i][j+1] = -1;
+                plat[i][j+2] = -1;
             }
         }
     }
+    return plat;
 }
 
-void jeu::check_rows(){
+vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     cout << "check rows"<< endl;
-    for (int i=1; i<taille_plateau+1; i++){
+    for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
-            if (plateau[j][taille_plateau-i] == plateau[j+1][taille_plateau-i] && plateau[j][taille_plateau-i] == plateau[j+2][taille_plateau-i]){
-                plateau[j][taille_plateau-i] = -1;
-                plateau[j+1][taille_plateau-i] = -1;
-                plateau[j+2][taille_plateau-i] = -1;
+            if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
+                plat[j][i] = -1;
+                plat[j+1][i] = -1;
+                plat[j+2][i] = -1;
             }
         }
     }
+    return plat;
 }
 
 void jeu::search_combinaison(){
     vector<vector<int >> ancien_plateau;
     while (ancien_plateau != plateau){
         ancien_plateau = plateau;
-        check_rows();
-        check_lines();
+        set_plateau(check_rows(plateau));
+        set_plateau(check_lines(plateau));
         fall();
     }
 }
@@ -67,13 +69,14 @@ void jeu::fall(){
 void jeu::afficher_plateau_de_jeu(){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
-            if (plateau[i][j] == 0){cout << "B ,";}
-            if (plateau[i][j] == 1){cout << "G ,";}
-            if (plateau[i][j] == 4){cout << "Y ,";}
-            if (plateau[i][j] == 2){cout << "R ,";}
-            if (plateau[i][j] == 5){cout << "C ,";}
-            if (plateau[i][j] == 3){cout << "M ,";}
-            if (plateau[i][j] == 6){cout << "O ,";}
+            if (plateau[i][j] == 0){cout << " B ,";}
+            if (plateau[i][j] == 1){cout << " G ,";}
+            if (plateau[i][j] == 4){cout << " Y ,";}
+            if (plateau[i][j] == 2){cout << " R ,";}
+            if (plateau[i][j] == 5){cout << " C ,";}
+            if (plateau[i][j] == 3){cout << " M ,";}
+            if (plateau[i][j] == 6){cout << " O ,";}
+            if (plateau[i][j] == -1){cout << "-1 ,";}
         }
         cout << endl;
     }
@@ -85,16 +88,16 @@ void jeu::echange(coord a, coord b){
 }
 
 bool jeu::coup_possible(coord a, coord b){
-    vector<vector<int >> test_plateau;
+    vector<vector<int >> test_plateau = get_plateau();
     swap(test_plateau[a.i][a.j], test_plateau[b.i][b.j]);
-    check_lines();
-    check_rows();
+    test_plateau = check_lines(test_plateau);
+    test_plateau = check_rows(test_plateau);
     for (auto &l: test_plateau){
         for (auto &i: l){
             if (i==-1){
-                return false;
+                return true;
             }
         }
     }
-    return true;
+    return false;
 }
