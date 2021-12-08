@@ -20,15 +20,9 @@ private:
         int j;
     };
     
-    
 public:
     jeu(){start();};
 
-    vector<vector<int> > check_lines(vector<vector<int> > plat);
-    vector<vector<int> > check_rows(vector<vector<int> > plat);
-    void fall();
-    void afficher_plateau_de_jeu();
-    void search_combinaison();
     vector<vector<int> > get_plateau(){
         return plateau;
     }
@@ -48,10 +42,15 @@ public:
         return plateau[a][b];
     }
 
-    void melanger();    // si pas la poss de faire une combi de 3 bonbons
+    vector<vector<int> > check_lines(vector<vector<int> > plat);
+    vector<vector<int> > check_rows(vector<vector<int> > plat);
+    void search_combinaison();
+    void fall();
+    void afficher_plateau_de_jeu();
     void echange(coord a, coord b);
-    
     bool coup_possible(coord a, coord b);
+    
+    void melanger();    // si pas la poss de faire une combi de 3 bonbons
 };
 
 

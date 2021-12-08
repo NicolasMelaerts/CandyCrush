@@ -11,22 +11,6 @@ void Rectangle::draw() {
   fl_draw_box(FL_BORDER_FRAME, center.x-w/2, center.y-h/2, w+1, h+1, frameColor);
 }
 
-void Rectangle::setFillColor(Fl_Color newFillColor) {
-  fillColor = newFillColor;
-}
-
-Fl_Color Rectangle::getFillColor(){
-  return fillColor;
-}
-
-void Rectangle::setFrameColor(Fl_Color newFrameColor) {
-  frameColor = newFrameColor;
-}
-
-Fl_Color Rectangle::getFrameColor(){
-  return frameColor;
-}
-
 bool Rectangle::contains(Point p) {
   return p.x>=center.x-w/2 &&
          p.x<center.x+w/2 &&
@@ -92,15 +76,13 @@ void Canvas::mouseMove(Point mouseLoc) {
 void Canvas::moveBonbon(Point p, int keyCode) {
   for (auto &v: bonbons){
     for (auto &c: v){
-      Point posplat{c.getPosPlatContain(p)};
+      Point posplat{c.getPosPlatifContain(p)};
       Point decalage{0,0};
       if (posplat.x != -1){
         if (keyCode == 65362){decalage.x = -1;} //up
         if (keyCode == 65361){decalage.y = -1;} //left
         if (keyCode == 65363){decalage.y = 1;} // right
         if (keyCode == 65364){decalage.x = 1;} // down
-
-        
 
         if ((posplat.x>0 && decalage.x == -1) || (posplat.x<8 && decalage.x == 1) || (posplat.y>0 && decalage.y == -1) || (posplat.y < 8 && decalage.y == 1)){
           if (j.coup_possible({posplat.x,posplat.y}, {posplat.x+decalage.x,posplat.y+decalage.y})){
@@ -171,4 +153,20 @@ void Canvas::fall(){
   afficherCanvas();
   j.afficher_plateau_de_jeu();
 
+}
+
+void Canvas::afficherCanvas(){
+  for (int i=0; i<9; i++){
+    for (int j=0; j<9; j++){
+      cout << "[" << bonbons[i][j].getPosPlat().x << ", " << bonbons[i][j].getPosPlat().y << "]";
+      if (bonbons[i][j].getBonbonColor() == 88){cout << "R ,";}
+      if (bonbons[i][j].getBonbonColor() == 63){cout << "G ,";}
+      if (bonbons[i][j].getBonbonColor() == 95){cout << "Y ,";}
+      if (bonbons[i][j].getBonbonColor() == 216){cout << "B ,";}
+      if (bonbons[i][j].getBonbonColor() == 248){cout << "M ,";}
+      if (bonbons[i][j].getBonbonColor() == fl_rgb_color(251, 139, 35)){cout << "O ,";}
+    }
+    cout << endl;
+  }
+  cout << endl;
 }

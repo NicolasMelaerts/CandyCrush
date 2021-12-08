@@ -101,3 +101,4 @@ bool jeu::coup_possible(coord a, coord b){
     }
     return false;
 }
+

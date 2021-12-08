@@ -24,14 +24,25 @@ class Rectangle {
   int w, h;
   Fl_Color fillColor, frameColor;
  public:
+  // constructeur 
   Rectangle(Point center, int w, int h, Fl_Color frameColor = FL_BLACK, Fl_Color fillColor = FL_WHITE);
-  void draw();
 
-  void setFillColor(Fl_Color newFillColor);
-  Fl_Color getFillColor();
+  // getteur / setteur
+  void setFillColor(Fl_Color newFillColor) {
+    fillColor = newFillColor;
+  }
 
-  void setFrameColor(Fl_Color newFrameColor);
-  Fl_Color getFrameColor();
+  Fl_Color getFillColor(){
+    return fillColor;
+  }
+
+  void setFrameColor(Fl_Color newFrameColor) {
+    frameColor = newFrameColor;
+  }
+
+  Fl_Color getFrameColor(){
+    return frameColor;
+  }
 
   void setWidth(int neww) {
     w = neww;
@@ -56,7 +67,9 @@ class Rectangle {
     return center;
   }
 
+  // méthodes
   bool contains(Point p);
+  void draw();
 };
 
 class Bonbon{
@@ -64,12 +77,10 @@ class Bonbon{
     Fl_Color BonbonColor;
     Point PosPlateau;
 public:
+    // constructeur
     Bonbon(Point center, int w, int h, Fl_Color BonbonColor, Point PosPlateau);
-    void draw();
-    void mouseMove(Point mouseLoc);
-    void mouseClick(Point mouseLoc);
-    void moveBonbon(Point p, int keyCode, jeu j, vector< vector<Bonbon> > bonbons);
 
+    // getteur / setteur
     Fl_Color getBonbonColor(){
       return BonbonColor;
     }
@@ -81,7 +92,7 @@ public:
       return r.getPoint();
     }
 
-    Point getPosPlatContain(Point mouseLoc){
+    Point getPosPlatifContain(Point mouseLoc){
       if (r.contains(mouseLoc)){
         return PosPlateau;
       }
@@ -95,11 +106,19 @@ public:
     void setPosPlat(Point newP){
       PosPlateau = newP;
     }
+
+    // méthodes
+    void draw();
+    void mouseClick(Point mouseLoc);
+    void mouseMove(Point mouseLoc);
+    void moveBonbon(Point p, int keyCode, jeu j, vector< vector<Bonbon> > bonbons);
+
 };
 
 class Mur{
   Rectangle r;
 public:
+  // constructeur
   Mur(Point center, int w, int h);
 };
 
@@ -110,31 +129,18 @@ class Canvas{
     void initialize();
     jeu j;
 public:
+    //constructeur
     Canvas(){
         initialize();
     };
+
+    // méthodes
     void draw();
     void mouseMove(Point mouseLoc);
     void moveBonbon(Point p, int keyCode);
-    void afficherCanvas(){
-      for (int i=0; i<9; i++){
-        for (int j=0; j<9; j++){
-          cout << "[" << bonbons[i][j].getPosPlat().x << ", " << bonbons[i][j].getPosPlat().y << "]";
-            if (bonbons[i][j].getBonbonColor() == 88){cout << "R ,";}
-            if (bonbons[i][j].getBonbonColor() == 63){cout << "G ,";}
-            if (bonbons[i][j].getBonbonColor() == 95){cout << "Y ,";}
-            if (bonbons[i][j].getBonbonColor() == 216){cout << "B ,";}
-            if (bonbons[i][j].getBonbonColor() == 248){cout << "M ,";}
-            if (bonbons[i][j].getBonbonColor() == 223){cout << "C ,";}
-            if (bonbons[i][j].getBonbonColor() == fl_rgb_color(251, 139, 35)){cout << "O ,";}
-        }
-        cout << endl;
-    }
-    cout << endl;
-    }
-
     void maj_canvas();
     void fall();
+    void afficherCanvas();
 };
 
 
