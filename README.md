@@ -12,7 +12,7 @@ Projet LDP2
                                 |                                                               |           |
                                 |                                                               |           |
                                 ↓                                                               |           |
-main                            PlateauDeJeu                                                    |           |
+main <--------------------------PlateauDeJeu                                                    |           |
                                                                                                 |           |
                                                                                                 |           |
                                 Animation (explosion, fall_bonbon)<-----------------------------|           |
