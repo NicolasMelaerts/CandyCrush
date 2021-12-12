@@ -1,5 +1,5 @@
 run:
-	make main && ./main && rm PlateauDeJeu.o && rm Jeu.o && rm Animation.o && rm Shapes.o && rm ElementsDeJeu.o
+	make main && ./main && rm PlateauDeJeu.o && rm Jeu.o && rm Animation.o && rm Shapes.o && rm ElementsDeJeu.o && rm main
 
 main: main.cpp PlateauDeJeu.o Jeu.o Animation.o Shapes.o ElementsDeJeu.o
 	g++ --std='c++17' -o main main.cpp PlateauDeJeu.o Jeu.o Animation.o Shapes.o ElementsDeJeu.o -lfltk
