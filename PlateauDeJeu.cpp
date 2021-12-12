@@ -1,51 +1,4 @@
-#include "plateau.hpp"
-
-
-using namespace std;
-
-Rectangle::Rectangle(Point center, int w, int h, Fl_Color frameColor, Fl_Color fillColor):
-  center{center}, w{w}, h{h}, fillColor{fillColor}, frameColor{frameColor} {}
-
-void Rectangle::draw() {
-  fl_draw_box(FL_FLAT_BOX, center.x-w/2, center.y-h/2, w, h, fillColor);
-  fl_draw_box(FL_BORDER_FRAME, center.x-w/2, center.y-h/2, w+1, h+1, frameColor);
-}
-
-bool Rectangle::contains(Point p) {
-  return p.x>=center.x-w/2 &&
-         p.x<center.x+w/2 &&
-         p.y>=center.y-h/2 &&
-         p.y<center.y+h/2;
-}
-
-
-Bonbon::Bonbon(Point center, int w, int h, Fl_Color BonbonColor, Point PosPlateau):
-r{center,w,h,BonbonColor, BonbonColor}{this->BonbonColor=BonbonColor; this->PosPlateau=PosPlateau;}
-
-void Bonbon::draw(){
-  r.draw();
-}
-
-void Bonbon::mouseClick(Point mouseLoc){
-}
-
-void Bonbon::mouseMove(Point mouseLoc){
-    if (r.contains(mouseLoc)){
-      if (r.getFillColor() == 88 or r.getFillColor() == 216 or r.getFillColor() == 248){
-        r.setFrameColor(FL_WHITE);
-      } else{
-        r.setFrameColor(FL_BLACK);
-      }
-    }
-    else{
-      r.setFrameColor(r.getFillColor());
-    }
-
-}
-
-
-Mur::Mur(Point center, int w, int h):
-r{center, w, h, FL_BLACK, FL_BLACK}{}
+#include "PlateauDeJeu.hpp"
 
 
 void Canvas::initialize(){
@@ -105,6 +58,12 @@ void Canvas::moveBonbon(Point p, int keyCode) {
   }
 }
 
+void Canvas::mouseClick(Point mouseLoc){
+  for (auto &v: bonbons)
+    for (auto &c: v)
+      c.mouseClick(mouseLoc);
+}
+
 void Canvas::maj_canvas(){
     vector<vector<int >> ancien_plateau;
     while (ancien_plateau != j.get_plateau()){
@@ -130,7 +89,6 @@ void Canvas::fall(){
         to_fall++;
       } else{
         for (int l=0; l<to_fall; l++){
-          cout << "TOUR DE BOUCLE" << endl;
           afficherCanvas();
           bonbons[k-l][i] = bonbons[k-l-1][i];
           afficherCanvas();

@@ -11,7 +11,7 @@
 #include <random>
 #include <unistd.h>
 
-#include "plateau.hpp"
+#include "PlateauDeJeu.hpp"
 
 using namespace std;
 
@@ -69,6 +69,8 @@ class MainWindow : public Fl_Window {
                 keyPressed(Fl::event_key(), c);
             case FL_Left:
                 c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
+            case FL_PUSH:
+                c.mouseClick(Point{Fl::event_x(),Fl::event_y()});
         }
         return 0;
     }

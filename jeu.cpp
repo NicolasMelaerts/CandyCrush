@@ -1,4 +1,4 @@
-#include "jeu.hpp"
+#include "Jeu.hpp"
 
 void jeu::start(){
     for (int i=0; i<taille_plateau; i++){
