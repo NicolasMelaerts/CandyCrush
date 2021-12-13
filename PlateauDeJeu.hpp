@@ -35,6 +35,3 @@ public:
 };
 
 
-// Pour que murs et bonbons hérite de cette classe et pouvoir 
-// stocker des éléments de même type dans le vecteur plateau
-class ElementDeJeu{};

@@ -1,5 +1,36 @@
 #include "Jeu.hpp"
 
+void jeu::ouvertureNiveau(){
+    ifstream Niv("NiveauxDeJeu/Niv1");  //Ouverture d'un fichier en lecture
+
+    for (int i=0; i<taille_plateau; i++){
+        plateau.push_back({});
+        for (int j=0; j<taille_plateau; j++){
+            plateau[i].push_back(-1);
+        }
+    }
+
+    if(Niv){
+        string Case;
+        int i= 0, j=0;
+        while(Niv >> Case){
+            if (j==9){
+                i++;
+                j=0;
+            }
+            int k = stoi(Case);
+            cout << k << "[" << i << ", " << j  << "]" << endl; 
+            plateau[i][j]= k;
+            afficher_plateau_de_jeu();
+            j++;
+            
+        }
+    }
+    else{
+        cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
+    }
+}
+
 void jeu::start(){
     for (int i=0; i<taille_plateau; i++){
         plateau.push_back({});
@@ -15,9 +46,11 @@ vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]){ // si a = b et a = c alors b = c
-                plat[i][j] = -1;
-                plat[i][j+1] = -1;
-                plat[i][j+2] = -1;
+                if (plat[i][j] != -2){ // MURs
+                    plat[i][j] = -1;
+                    plat[i][j+1] = -1;
+                    plat[i][j+2] = -1;
+                }
             }
         }
     }
@@ -29,9 +62,11 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
-                plat[j][i] = -1;
-                plat[j+1][i] = -1;
-                plat[j+2][i] = -1;
+                if (plat[j][i]!=-2){ //MURs
+                    plat[j][i] = -1;
+                    plat[j+1][i] = -1;
+                    plat[j+2][i] = -1;
+                }
             }
         }
     }
@@ -69,14 +104,14 @@ void jeu::fall(){
 void jeu::afficher_plateau_de_jeu(){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
-            if (plateau[i][j] == 0){cout << " B ,";}
-            if (plateau[i][j] == 1){cout << " G ,";}
-            if (plateau[i][j] == 4){cout << " Y ,";}
-            if (plateau[i][j] == 2){cout << " R ,";}
-            if (plateau[i][j] == 5){cout << " C ,";}
-            if (plateau[i][j] == 3){cout << " M ,";}
-            if (plateau[i][j] == 6){cout << " O ,";}
-            if (plateau[i][j] == -1){cout << "-1 ,";}
+            if (plateau[i][j] == 0){cout <<  "B   ,";}
+            if (plateau[i][j] == 1){cout <<  "G   ,";}
+            if (plateau[i][j] == 2){cout <<  "R   ,";}
+            if (plateau[i][j] == 3){cout <<  "M   ,";}
+            if (plateau[i][j] == 4){cout <<  "Y   ,";}
+            if (plateau[i][j] == 5){cout <<  "O   ,";}
+            if (plateau[i][j] == -2){cout << "MUR ,";}
+            if (plateau[i][j] == -1){cout << "RDT ,";}
         }
         cout << endl;
     }

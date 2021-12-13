@@ -71,6 +71,8 @@ class MainWindow : public Fl_Window {
                 c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
             case FL_PUSH:
                 c.mouseClick(Point{Fl::event_x(),Fl::event_y()});
+            case FL_DRAG:
+                EXIT_SUCCESS;
         }
         return 0;
     }
