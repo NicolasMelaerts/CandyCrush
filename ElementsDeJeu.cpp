@@ -22,7 +22,7 @@ void Bonbon::drawWithoutAnimate(){
 
 void Bonbon::mouseClick(Point mouseLoc){
   if (!animation && r.contains(mouseLoc)) {
-    animation = new Animation(this, static_cast<Animation::AnimationType>(1)); //random()%3
+    animation = new Animation(this, static_cast<Animation::AnimationType>(0)); //random()%3
   }
 }
 
@@ -49,12 +49,12 @@ void Animation::draw() {
   ++time;
   Translation t3{currentBonbonFall()};
   Rotation r{b->getPoint(), currentExplosion()};
-  b->draw();
+  b->drawWithoutAnimate();
 }
 
 Point Animation::currentBonbonFall() {
   if (animationType==Bonbon_fall)
-    return {0, static_cast<int>(1*descente*sin(3.1415*time/animationTime/2))};
+    return {0, static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
   else
     return {0, 0};
 }

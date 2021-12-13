@@ -70,6 +70,7 @@ void Canvas::maj_canvas(){
         ancien_plateau = j.get_plateau();
         j.set_plateau(j.check_rows(j.get_plateau()));
         j.set_plateau(j.check_lines(j.get_plateau()));
+        // animation suppression
         fall();
     }
 
@@ -92,7 +93,6 @@ void Canvas::fall(){
           afficherCanvas();
           bonbons[k-l][i] = bonbons[k-l-1][i];
           afficherCanvas();
-          
           bonbons[k-l][i].setPosPlat({k-l,i});
           afficherCanvas();
 
