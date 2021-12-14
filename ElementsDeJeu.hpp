@@ -45,6 +45,9 @@ public:
     void mouseClick(Point mouseLoc);
     void mouseMove(Point mouseLoc);
     void moveBonbon(Point p, int keyCode, jeu j, vector< vector<Bonbon> > bonbons);
+    bool isAnimate();
+    void exploseBonbon();
+    
 
 };
 

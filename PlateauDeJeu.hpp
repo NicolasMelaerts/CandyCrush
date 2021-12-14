@@ -16,6 +16,7 @@
 class Canvas{
     vector< vector<Bonbon> > bonbons;
     vector<Fl_Color > Colors{FL_BLUE, FL_GREEN, FL_RED, FL_MAGENTA,FL_YELLOW, fl_rgb_color(251, 139, 35)};
+    int anim_en_cours = 0;
     void initialize();
     jeu j;
 public:
@@ -32,6 +33,7 @@ public:
     void maj_canvas();
     void fall();
     void afficherCanvas();
+    void attente_fin_anim();
 };
 
 

@@ -15,13 +15,20 @@ void Bonbon::draw(){
     drawWithoutAnimate();
 }
 
+bool Bonbon::isAnimate(){
+  return animation!=nullptr;
+}
+
 
 void Bonbon::drawWithoutAnimate(){
   r.draw();
 }
 
 void Bonbon::mouseClick(Point mouseLoc){
-  if (!animation && r.contains(mouseLoc)) {
+}
+
+void Bonbon::exploseBonbon(){
+  if (!animation) {
     animation = new Animation(this, static_cast<Animation::AnimationType>(0)); //random()%3
   }
 }

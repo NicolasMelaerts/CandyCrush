@@ -1,5 +1,5 @@
 #include "PlateauDeJeu.hpp"
-
+#include <unistd.h>
 
 void Canvas::initialize(){
   j.afficher_plateau_de_jeu();
@@ -23,7 +23,29 @@ void Canvas::mouseMove(Point mouseLoc) {
   for (auto &v: bonbons)
     for (auto &c: v)
       c.mouseMove(mouseLoc);
-      
+}
+
+void Canvas::attente_fin_anim(){
+  bool anim_en_cours=true;
+  while(anim_en_cours){
+    anim_en_cours = false;
+    for (int i=0, j = 0; i<9; j++){
+        cout << "i = " << i << "j = " << j << "  " << endl;
+        if (bonbons[i][j].isAnimate()){
+          cout << "(" << bonbons[i][j].getPosPlat().x << ", " << bonbons[i][j].getPosPlat().y << ")" << endl;
+          anim_en_cours = true;
+          break;
+        }
+        if (j==8){
+          i++;
+          j=0;
+        }
+    }
+    if (anim_en_cours){
+      cout << "Wait";
+      Fl::wait();
+    }
+  }
 }
 
 void Canvas::moveBonbon(Point p, int keyCode) {
@@ -70,7 +92,13 @@ void Canvas::maj_canvas(){
         ancien_plateau = j.get_plateau();
         j.set_plateau(j.check_rows(j.get_plateau()));
         j.set_plateau(j.check_lines(j.get_plateau()));
-        // animation suppression
+        for (int i = 0; i<9;i++){
+          for (int j = 0; j<9;j++){
+            if (ancien_plateau[i][j]==-1){
+              bonbons[i][j].exploseBonbon();
+            }
+          }
+        }
         fall();
     }
 
@@ -81,7 +109,6 @@ void Canvas::fall(){
   j.fall();
 
   int to_fall=0;
-
   cout << "FALLLLLLLL" << endl;
 
   for (int i=0; i<j.get_taille_plateau(); i++){
@@ -95,7 +122,6 @@ void Canvas::fall(){
           afficherCanvas();
           bonbons[k-l][i].setPosPlat({k-l,i});
           afficherCanvas();
-
           bonbons[k-l][i].setPoint({50*i+48, 50*(k-l)+70});
           
         }
