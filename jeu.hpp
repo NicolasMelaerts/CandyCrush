@@ -14,9 +14,10 @@ using namespace std;
 class jeu{
 private:
     vector<vector<int> > plateau;
+    
     int taille_plateau = 9;
     int nb_couleurs_bonbon = 6;
-    void start();
+
     void ouvertureNiveau();
     struct coord{
         int i;
@@ -25,7 +26,6 @@ private:
     
 public:
     jeu(){
-        //start();
         ouvertureNiveau();
     };
 

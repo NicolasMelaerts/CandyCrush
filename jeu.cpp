@@ -1,7 +1,7 @@
 #include "Jeu.hpp"
 
 void jeu::ouvertureNiveau(){
-    ifstream Niv("NiveauxDeJeu/Niv1");  //Ouverture d'un fichier en lecture
+    ifstream Niv("NiveauDeJeu/Niv1");  //Ouverture d'un fichier en lecture
 
     for (int i=0; i<taille_plateau; i++){
         plateau.push_back({});
@@ -19,9 +19,9 @@ void jeu::ouvertureNiveau(){
                 j=0;
             }
             int k = stoi(Case);
-            cout << k << "[" << i << ", " << j  << "]" << endl; 
+            //cout << k << "[" << i << ", " << j  << "]" << endl; 
             plateau[i][j]= k;
-            afficher_plateau_de_jeu();
+            //afficher_plateau_de_jeu();
             j++;
             
         }
@@ -29,16 +29,7 @@ void jeu::ouvertureNiveau(){
     else{
         cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << endl;
     }
-}
 
-void jeu::start(){
-    for (int i=0; i<taille_plateau; i++){
-        plateau.push_back({});
-        for (int j=0; j<taille_plateau; j++){
-            plateau[i].push_back(rand()%nb_couleurs_bonbon);
-        }
-    }
-    search_combinaison();
 }
 
 vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
@@ -46,14 +37,19 @@ vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]){ // si a = b et a = c alors b = c
-                if (plat[i][j] != -2){ // MURs
-                    plat[i][j] = -1;
-                    plat[i][j+1] = -1;
-                    plat[i][j+2] = -1;
+                if (plat[i][j] != 0){ // MURs
+                    if (j<taille_plateau-3){
+                        if (plat[i][j+3] > 0)
+                            plat[i][j+3] = (plat[i][j+3]*-1)-12;
+                    }
+                    plat[i][j] = -20;
+                    plat[i][j+1] = -20;
+                    plat[i][j+2] = -20;
                 }
             }
         }
     }
+
     return plat;
 }
 
@@ -62,10 +58,14 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
-                if (plat[j][i]!=-2){ //MURs
-                    plat[j][i] = -1;
-                    plat[j+1][i] = -1;
-                    plat[j+2][i] = -1;
+                if (plat[j][i]!=0){ //MURs
+                    if (i<taille_plateau-3){
+                        if (plat[j+3][i] > 0)
+                            plat[j+3][i] = (plat[j+3][i]*-1)-12;
+                    }
+                    plat[j][i] = -20;
+                    plat[j+1][i] = -20;
+                    plat[j+2][i] = -20;
                 }
             }
         }
@@ -87,7 +87,7 @@ void jeu::fall(){
     vector<int> col;
     for (int i=0; i<taille_plateau; i++){
         for (int j=taille_plateau-1; j>=0; j--){
-            if (plateau[j][i]!=-1){
+            if (plateau[j][i]!=-20){
                 col.push_back(plateau[j][i]);
             }
         }
@@ -104,14 +104,25 @@ void jeu::fall(){
 void jeu::afficher_plateau_de_jeu(){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
-            if (plateau[i][j] == 0){cout <<  "B   ,";}
-            if (plateau[i][j] == 1){cout <<  "G   ,";}
-            if (plateau[i][j] == 2){cout <<  "R   ,";}
-            if (plateau[i][j] == 3){cout <<  "M   ,";}
-            if (plateau[i][j] == 4){cout <<  "Y   ,";}
-            if (plateau[i][j] == 5){cout <<  "O   ,";}
-            if (plateau[i][j] == -2){cout << "MUR ,";}
-            if (plateau[i][j] == -1){cout << "RDT ,";}
+            if (plateau[i][j] == 0){cout <<  "MUR ,";}
+
+            if (plateau[i][j] == 1){cout <<  "BR  ,";}
+            if (plateau[i][j] == 2){cout <<  "BB  ,";}
+            if (plateau[i][j] == 3){cout <<  "BJ  ,";}
+            if (plateau[i][j] == 4){cout <<  "BV  ,";}
+            if (plateau[i][j] == 5){cout <<  "BM  ,";}
+            if (plateau[i][j] == 6){cout <<  "BO  ,";}
+
+            if (plateau[i][j] == -20){cout << "RDT ,";}
+
+            if (plateau[i][j] ==-13){cout << "BSR ,";}
+            if (plateau[i][j] ==-14){cout << "BSB ,";}
+            if (plateau[i][j] ==-15){cout << "BSJ ,";}
+            if (plateau[i][j] ==-16){cout << "BSV ,";}
+            if (plateau[i][j] ==-17){cout << "BSM ,";}
+            if (plateau[i][j] ==-18){cout << "BSO ,";}
+            
+
         }
         cout << endl;
     }
@@ -129,7 +140,7 @@ bool jeu::coup_possible(coord a, coord b){
     test_plateau = check_rows(test_plateau);
     for (auto &l: test_plateau){
         for (auto &i: l){
-            if (i==-1){
+            if (i==-20){
                 return true;
             }
         }

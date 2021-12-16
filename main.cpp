@@ -44,7 +44,7 @@ void mouseMove(int x, int y){
 // This is the ASCII value for normal keys
 // For special keys like arrow, find the key codes:
 // https://www.fltk.org/doc-1.3/enumerations.html
-void keyPressed(int keyCode, Canvas c){
+void keyPressed(int keyCode){
     if (keyCode=='q') exit(0);
 }
 
@@ -62,17 +62,19 @@ class MainWindow : public Fl_Window {
     }
     int handle(int event) override {
         switch (event) {
+            case FL_RELEASE:
+                c.swapElementDeJeu();
             case FL_MOVE:
                 c.mouseMove(Point{Fl::event_x(),Fl::event_y()});
                 return 1;
             case FL_KEYDOWN:
-                keyPressed(Fl::event_key(), c);
+                keyPressed(Fl::event_key());
             case FL_Left:
-                c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
+                //c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
             case FL_PUSH:
                 c.mouseClick(Point{Fl::event_x(),Fl::event_y()});
             case FL_DRAG:
-                EXIT_SUCCESS;
+                c.drag(Point{Fl::event_x(),Fl::event_y()});
         }
         return 0;
     }

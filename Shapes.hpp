@@ -72,4 +72,29 @@ class Rectangle {
 };
 
 
-// class cercle pour bonbons spéciaux
+class Circle {
+  Point center;
+  int r;
+  Fl_Color fillColor, frameColor;
+  const double pi=3.141592653589793238462643383279502884L;
+ public:
+  Circle(Point center, int r,
+            Fl_Color frameColor = FL_BLACK,
+            Fl_Color fillColor = FL_WHITE);
+  void draw();
+  void setFillColor(Fl_Color newFillColor);
+  Fl_Color getFillColor() {
+    return fillColor;
+  }
+  void setFrameColor(Fl_Color newFrameColor);
+  Fl_Color getFrameColor() {
+    return frameColor;
+  }
+  bool contains(Point p);
+  Point getCenter() {
+    return center;
+  }
+  void setCenter(Point newCenter){
+    center = newCenter;
+  }
+};
