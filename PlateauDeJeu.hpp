@@ -3,7 +3,7 @@
 
 class Canvas{
     private:
-        vector <shared_ptr<ElementDeJeu>> E;
+        vector< vector<shared_ptr<ElementDeJeu>> > E;
         
         vector<Fl_Color > Colors{FL_RED, FL_BLUE,FL_YELLOW, FL_GREEN, FL_MAGENTA, fl_rgb_color(251, 139, 35)};
         void initialize();
@@ -25,4 +25,8 @@ class Canvas{
         void swapElementDeJeu();
 
         void mouseClick(Point mouseLoc);
+
+        void maj_canvas();
+        void fall();
+        void wait_anim();
 };

@@ -26,7 +26,7 @@ private:
     
 public:
     jeu(){
-        ouvertureNiveau();
+        ouvertureNiveau();            
     };
 
     vector<vector<int> > get_plateau(){
@@ -47,6 +47,7 @@ public:
     int getelemplateau(int a, int b){
         return plateau[a][b];
     }
+
 
     vector<vector<int> > check_lines(vector<vector<int> > plat);
     vector<vector<int> > check_rows(vector<vector<int> > plat);
