@@ -194,6 +194,8 @@ void Canvas::fall(){
           }
       }
     }
+
+
 }
 
 void Canvas::wait_anim(){
