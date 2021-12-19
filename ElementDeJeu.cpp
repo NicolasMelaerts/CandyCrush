@@ -48,10 +48,19 @@ Point Bonbon::getPosPlatifcontain(Point coord){
 
 void Bonbon::DoExplosion(){
   if (!animation){
-    animation = new Animation(this, static_cast<Animation::AnimationType>(0));
+    animation = new Animation(this, static_cast<Animation::AnimationType>(0), 0);
   }
 }
 
+void Bonbon::ElementMove(int sens){
+  if (!animation){
+    animation = new Animation(this, static_cast<Animation::AnimationType>(1), sens);
+  }
+}
+
+bool Bonbon::animation_is_complete(){
+  return animation;
+}
 
 BonbonSpecialRond::BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r):ElementDeJeu{posPlat, couleur}, c{{50*posPlat.y+48, 50*posPlat.x+70}, r, couleur, couleur},animation{nullptr}{}
 
@@ -99,6 +108,10 @@ Point BonbonSpecialRond::getPosPlatifcontain(Point coord){
 
 void BonbonSpecialRond::DoExplosion(){}
 
+bool BonbonSpecialRond::animation_is_complete(){
+  return animation;
+}
+
 
 Mur::Mur(Point posPlat, int w, int h):ElementDeJeu{posPlat, FL_BLACK}, r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, FL_BLACK, FL_BLACK}{}
 
@@ -121,19 +134,38 @@ Point Mur::getPosPlatifcontain(Point coord){
 
 void Mur::DoExplosion(){}
 
+bool Mur::animation_is_complete(){
+  return EXIT_SUCCESS;
+}
+
 
 void Animation::draw() {
-  ++time;
-  Translation t3{currentBonbonFall()};
+  for (int k=0; k<5; k++)
+    ++time;
+  Translation t3{currentBonbonMove()};
   Rotation r{b->getPoint(), currentExplosion()};
   b->drawWithoutAnimate();
 }
 
-Point Animation::currentBonbonFall() {
-  if (animationType==Bonbon_fall)
-    return {0, static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
-  else
-    return {0, 0};
+Point Animation::currentBonbonMove() {
+  if (animationType==Bonbon_move){
+    if (sens==0){
+      return {0, static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
+    }
+    else if (sens==1){
+      return {0, static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6))};
+    }
+    else if (sens==2){
+      return {static_cast<int>(1*descente*sin(3.1415*time/animationTime/6)), 0};
+    }
+    else if (sens==3){
+      return {static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6)), 0};
+    }
+    
+    else
+      return {0, 0};
+  }
+  else return {0,0};
 }
 
 double Animation::currentExplosion() {

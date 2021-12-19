@@ -82,6 +82,27 @@ void Canvas::swapElementDeJeu(){
     if (p1.x != -1 && p2.x != -1){
         if ((p1.x == p2.x and p1.y == p2.y+1) || (p1.x == p2.x and p1.y == p2.y-1) || (p1.x == p2.x+1 and p1.y == p2.y) || (p1.x == p2.x-1 and p1.y == p2.y)){
             if (j.coup_possible({p1.x, p1.y}, {p2.x, p2.y})){
+
+                if (p1.x == p2.x && p1.y == p2.y+1){
+                    E[idx1.x][idx1.y].get()->ElementMove(3);
+                    E[idx2.x][idx2.y].get()->ElementMove(2);
+                }
+
+                if (p1.x == p2.x && p1.y == p2.y+1){
+                    E[idx1.x][idx1.y].get()->ElementMove(2);
+                    E[idx2.x][idx2.y].get()->ElementMove(3);
+                }
+                if (p1.x == p2.x+1 && p1.y == p2.y){
+                    E[idx1.x][idx1.y].get()->ElementMove(1);
+                    E[idx2.x][idx2.y].get()->ElementMove(0);
+                }
+                if (p1.x == p2.x-1 && p1.y == p2.y){
+                    E[idx1.x][idx1.y].get()->ElementMove(0);
+                    E[idx2.x][idx2.y].get()->ElementMove(1);
+                }
+                
+                wait_anim();
+
                 E[idx1.x][idx1.y].get()->setPosPlat(p2);
                 E[idx2.x][idx2.y].get()->setPosPlat(p1);
 
@@ -91,18 +112,9 @@ void Canvas::swapElementDeJeu(){
                 j.set_plateau(j.check_rows(j.get_plateau()));
                 j.set_plateau(j.check_lines(j.get_plateau()));
 
-                j.afficher_plateau_de_jeu();
-
-                for (int i = 0; i<9;i++){
-                    for (int k = 0; k<9;k++){
-                        if (j.getelemplateau(i,k)==-20){
-                            E[i][k].get()->DoExplosion();
-                        }   
-                    }
-                }
-                wait_anim();
 
                 maj_canvas();
+
             }
             else cout << "coup impossible" << endl;
         }
@@ -112,8 +124,6 @@ void Canvas::swapElementDeJeu(){
 }
 
 void Canvas::mouseClick(Point mouseLoc){
-    //for (auto &e: E)
-        //e.get()->DoExplosion();
 }
 
 
@@ -121,13 +131,22 @@ void Canvas::maj_canvas(){
     vector<vector<int >> ancien_plateau;
 
     while (ancien_plateau != j.get_plateau()){
+        cout << "MAJ_CANVAS" << endl;
         ancien_plateau = j.get_plateau();
         j.set_plateau(j.check_rows(j.get_plateau()));
         j.set_plateau(j.check_lines(j.get_plateau()));
 
-        j.search_combinaison();
-        initialize();
-        //fall();
+        for (int i = 0; i<9;i++){
+            for (int k = 0; k<9;k++){
+                if (j.getelemplateau(i,k)==-20){
+                    E[i][k].get()->DoExplosion();
+                }   
+            }
+        }
+
+        wait_anim();
+        //j.search_combinaison();
+        fall();
 }
 }
 
@@ -138,39 +157,58 @@ void Canvas::fall(){
   j.fall();
   j.afficher_plateau_de_jeu();
 
-  int to_fall=0;
   cout << "FALLLLLLLL" << endl;
 
+  vector <Point> col;
+  Point bonbonExplose;
+
+
   for (int i=0; i<j.get_taille_plateau(); i++){
-    for (int k=0; k<9; k++){
-      if (plateau[k][i] != -20){
-        to_fall++;
-      } else{
-        for (int l=0; l<to_fall; l++){
-          E[k-l][i] = E[k-l-1][i];
-        }
+      for (int k=0; k<j.get_taille_plateau(); k++){
+          if (plateau[k][i] != -20 ){
+              col.push_back({k,i});
+          }
+          if (plateau[k][i]==-20 && col.size()!=0){
+              bonbonExplose = col[0];
+              E[k][i].get()->setPosPlat({-1,-1});
+              
+              for (int l=col.size()-1; l>=0; l--){
+                  plateau[col[l].x+1][col[l].y] = plateau[col[l].x][col[l].y];
+                  E[col[l].x][col[l].y].get()->ElementMove(0);
+                  wait_anim();
+                  E[col[l].x][col[l].y].get()->setPosPlat({col[l].x+1, col[l].y});
+                  E[col[l].x+1][col[l].y] =  E[col[l].x][col[l].y];
+                  col[l]={col[l].x+1, col[l].y};
+              }
+              plateau[bonbonExplose.x][bonbonExplose.y] = -20;
+              
+          }
       }
-      
-    }
-    cout << to_fall << endl;
-    for (int l=0; l<(j.get_taille_plateau()-to_fall); l++){
-        Bonbon b{{l,i}, Colors[j.getelemplateau(l,i)-1], 35, 35};
-        E[l].push_back(make_shared<Bonbon>(b));
-    }
-    to_fall = 0;
+      col.clear();
   }
+    for (int i=0; i<j.get_taille_plateau(); i++){
+      for (int k=0; k<j.get_taille_plateau(); k++){
+          if (plateau[k][i]==-20){
+            Bonbon b{{k,i}, Colors[j.getelemplateau(k,i)-1], 35,35};
+            E[k][i] = make_shared<Bonbon>(b);
+          }
+      }
+    }
 }
 
 void Canvas::wait_anim(){
     vector <int> lol;
     bool anim_en_cours=true;
     while (anim_en_cours){
-        anim_en_cours=false;
-        if (lol.size()<100){
-            lol.push_back(1000);
-            anim_en_cours = true;
-        }
+        anim_en_cours = false;
+        for (auto &l:E)
+            for (auto &e:l)
+                if (e.get()->animation_is_complete())
+                    anim_en_cours = true;
+
         if (anim_en_cours)
             Fl::wait();
         }
+
+        
 }

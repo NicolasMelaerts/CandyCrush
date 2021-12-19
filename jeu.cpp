@@ -19,9 +19,7 @@ void jeu::ouvertureNiveau(){
                 j=0;
             }
             int k = stoi(Case);
-            //cout << k << "[" << i << ", " << j  << "]" << endl; 
             plateau[i][j]= k;
-            //afficher_plateau_de_jeu();
             j++;
             
         }
@@ -35,14 +33,13 @@ void jeu::ouvertureNiveau(){
 
 vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
     cout << "check_lines" << endl;
-    afficher_plateau_de_jeu();
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]){ // si a = b et a = c alors b = c
                 if (plat[i][j] != 0){ // MURs
                     if (j<taille_plateau-3){
                         if (plat[i][j+3] == plat[j][i])
-                            plat[i][j+3] = (plat[i][j+3]*-1)-12;
+                            plat[i][j+3] = -20;  //devient un bonbon spécial -> (plat[i][j+3]*-1)-12;
                     }
                     plat[i][j] = -20;
                     plat[i][j+1] = -20;
@@ -51,20 +48,18 @@ vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
             }
         }
     }
-    afficher_plateau_de_jeu();
     return plat;
 }
 
 vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     cout << "check rows"<< endl;
-    afficher_plateau_de_jeu();
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
                 if (plat[j][i]!=0){ //MURs
                     if (i<taille_plateau-3){
                         if (plat[j+3][i] == plat[j][i])
-                            plat[j+3][i] = (plat[j+3][i]*-1)-12;
+                            plat[j+3][i] = -20;   // devient un bonbon spécial -> plat[j+3][i] = (plat[j+3][i]*-1)-12;
                     }
                     plat[j][i] = -20;
                     plat[j+1][i] = -20;
@@ -73,7 +68,6 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
             }
         }
     }
-    afficher_plateau_de_jeu();
     return plat;
 }
 

@@ -27,6 +27,9 @@ class ElementDeJeu{
         virtual void mouseMove(Point mouseLoc)=0;
         virtual Point getPosPlatifcontain(Point coord)=0;
         virtual void DoExplosion()=0;
+        virtual void ElementMove(int sens)=0;
+        virtual bool animation_is_complete()=0;
+        
 
 
         virtual ~ElementDeJeu(){}
@@ -47,6 +50,8 @@ class Bonbon: public ElementDeJeu{
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
         void DoExplosion() override;
+        void ElementMove(int sens) override;
+        bool animation_is_complete()override;
 };
 
 class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
@@ -63,6 +68,9 @@ class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
         void DoExplosion() override;
+        void ElementMove(int sens) override{};
+        bool animation_is_complete() override;
+
 };
 
 class Mur: public ElementDeJeu{
@@ -76,6 +84,9 @@ class Mur: public ElementDeJeu{
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
         void DoExplosion() override;
+        void ElementMove(int sens) override{};
+        bool animation_is_complete()override;
+
 };
 
 
@@ -104,17 +115,18 @@ struct Rotation {
 
 class Animation{
 public:
-    enum AnimationType {explosion, Bonbon_fall};
+    enum AnimationType {explosion, Bonbon_move};
 private:
     const int animationTime = 60;
     const int descente = 100;
+    int sens;
     Bonbon *b;
     AnimationType animationType;
     int time{0};
-    Point currentBonbonFall();
+    Point currentBonbonMove();
     double currentExplosion();
 public:
-    Animation(Bonbon *BonbonToAnimate, AnimationType animationType):b{BonbonToAnimate}, animationType{animationType}{}
+    Animation(Bonbon *BonbonToAnimate, AnimationType animationType, int sens):b{BonbonToAnimate}, animationType{animationType}, sens{sens}{}
     void draw();
     bool isComplete();
 };
