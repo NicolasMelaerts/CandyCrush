@@ -1,11 +1,22 @@
+#ifndef __ELEMENTDEJEU_H__
+#define __ELEMENTDEJEU_H__
+
 #include "Shapes.hpp"
+#include "Animation.hpp"
 
 class Animation;
+
+/*--------------------------------------------------
+
+ElementDeJeu class.
+
+--------------------------------------------------*/
 
 class ElementDeJeu{
     private:
         Point posPlat;
         Fl_Color couleur;
+        int enlenver = 0; 
 
     public:
         ElementDeJeu(Point posPlat, Fl_Color couleur);
@@ -21,8 +32,17 @@ class ElementDeJeu{
           posPlat = newPosPlat;
         };
 
+        void setEnlever(){
+                enlenver = 1;
+        }
+
+        bool getEnlever(){
+            return enlenver;
+        }
+
 
         virtual void draw()=0;
+        virtual int getMyId()=0;
         virtual void mouseClick(Point mouseLoc)=0;
         virtual void mouseMove(Point mouseLoc)=0;
         virtual Point getPosPlatifcontain(Point coord)=0;
@@ -36,6 +56,12 @@ class ElementDeJeu{
 };
 
 
+/*--------------------------------------------------
+
+Bonbon class. Heritage ElementDeJeu
+
+--------------------------------------------------*/
+
 class Bonbon: public ElementDeJeu{
     private:
         Rectangle r;
@@ -45,6 +71,7 @@ class Bonbon: public ElementDeJeu{
         Bonbon(Point posPlat, Fl_Color couleur, int w, int h);
 
         void draw() override;
+        int getMyId() override;
         void drawWithoutAnimate();
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
@@ -53,6 +80,12 @@ class Bonbon: public ElementDeJeu{
         void ElementMove(int sens) override;
         bool animation_is_complete()override;
 };
+
+/*--------------------------------------------------
+
+BonbonSpecialRond class. Heritage ElementDeJeu
+
+--------------------------------------------------*/
 
 class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
     private:
@@ -63,6 +96,7 @@ class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
         BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r);
 
         void draw() override;
+        int getMyId() override;
         void drawWithoutAnimate();
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
@@ -73,6 +107,12 @@ class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
 
 };
 
+/*--------------------------------------------------
+
+Mur class. Heritage ElementDeJeu
+
+--------------------------------------------------*/
+
 class Mur: public ElementDeJeu{
     private:
         Rectangle r;
@@ -80,6 +120,7 @@ class Mur: public ElementDeJeu{
         Mur(Point posPlat, int w, int h);
 
         void draw() override;
+        int getMyId() override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
@@ -89,46 +130,21 @@ class Mur: public ElementDeJeu{
 
 };
 
+class Glacage: public ElementDeJeu{
+  private: 
+    Rectangle r;
+    int vie;
+  public:
+    Glacage(Point posPlat, int w, int h);
 
-struct Translation {
-  Translation(Point p) {
-    fl_push_matrix();
-    fl_translate(p.x, p.y);
-  }
-  ~Translation() {
-    fl_pop_matrix();
-  }
+    void draw() override{};
+    int getMyId() override{return 100;};
+    void mouseClick(Point mouseLoc) override{};
+    void mouseMove(Point mouseLoc) override{};
+    Point getPosPlatifcontain(Point coord) override{return {-1,-1};};
+    void DoExplosion() override{};
+    void ElementMove(int sens) override{};
+    bool animation_is_complete()override{return EXIT_SUCCESS;};
 };
 
-struct Rotation {
-  Rotation(Point center, double angle) {
-    fl_push_matrix();
-    fl_translate(center.x, center.y);
-    fl_rotate(angle);
-    fl_translate(-1*center.x, -1*center.y);
-  }
-  ~Rotation() {
-    fl_pop_matrix();
-  }
-};
-
-
-class Animation{
-public:
-    enum AnimationType {explosion, Bonbon_move};
-private:
-    const int animationTime = 60;
-    const int descente = 100;
-    int sens;
-    Bonbon *b;
-    AnimationType animationType;
-    int time{0};
-    Point currentBonbonMove();
-    double currentExplosion();
-public:
-    Animation(Bonbon *BonbonToAnimate, AnimationType animationType, int sens):b{BonbonToAnimate}, animationType{animationType}, sens{sens}{}
-    void draw();
-    bool isComplete();
-};
-
-
+#endif

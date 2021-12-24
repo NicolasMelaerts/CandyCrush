@@ -1,3 +1,6 @@
+#ifndef __SHAPES_H__
+#define __SHAPES_H__
+
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Double_Window.H>
@@ -16,6 +19,13 @@ using namespace std;
 struct Point{
     int x,y;
 };
+
+
+/*--------------------------------------------------
+
+Rectangle class
+
+--------------------------------------------------*/
 
 
 class Rectangle {
@@ -72,6 +82,12 @@ class Rectangle {
 };
 
 
+/*--------------------------------------------------
+
+Circle class
+
+--------------------------------------------------*/
+
 class Circle {
   Point center;
   int r;
@@ -98,3 +114,5 @@ class Circle {
     center = newCenter;
   }
 };
+
+#endif

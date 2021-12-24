@@ -1,8 +1,24 @@
 #include "ElementDeJeu.hpp"
 
+/*--------------------------------------------------
+
+Bonbon class.
+
+--------------------------------------------------*/
+
 ElementDeJeu::ElementDeJeu(Point posPlat, Fl_Color couleur):posPlat{posPlat}, couleur{couleur}{}
 
 Bonbon::Bonbon(Point posPlat, Fl_Color couleur, int w, int h):ElementDeJeu{posPlat, couleur}, r{{50*posPlat.y+48, 50*posPlat.x+70},w,h,couleur, couleur},animation{nullptr}{}
+
+int Bonbon::getMyId(){
+  int c = r.getFillColor();
+  if (c==FL_RED){return 1;}
+  if (c==FL_BLUE){return 2;}
+  if (c==FL_YELLOW){return 3;}
+  if (c==FL_GREEN){return 4;}
+  if (c==FL_MAGENTA){return 5;}
+  else {return 6;} // (c==fl_rgb_color(251, 139, 35))
+};
 
 void Bonbon::draw(){
   if (animation && animation->isComplete()){
@@ -62,7 +78,25 @@ bool Bonbon::animation_is_complete(){
   return animation;
 }
 
+
+/*--------------------------------------------------
+
+BonbonSpecialRond class.
+
+--------------------------------------------------*/
+
 BonbonSpecialRond::BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r):ElementDeJeu{posPlat, couleur}, c{{50*posPlat.y+48, 50*posPlat.x+70}, r, couleur, couleur},animation{nullptr}{}
+
+int BonbonSpecialRond::getMyId(){
+  int couleur = c.getFillColor();
+  if (couleur==FL_RED){return -13;}
+  if (couleur==FL_BLUE){return -14;}
+  if (couleur==FL_YELLOW){return -15;}
+  if (couleur==FL_GREEN){return -16;}
+  if (couleur==FL_MAGENTA){return -17;}
+  else {return -18;} //(couleur==fl_rgb_color(251, 139, 35))
+
+};
 
 void BonbonSpecialRond::draw(){
   if (animation && animation->isComplete()){
@@ -113,7 +147,18 @@ bool BonbonSpecialRond::animation_is_complete(){
 }
 
 
+/*--------------------------------------------------
+
+Mur class.
+
+--------------------------------------------------*/
+
+
 Mur::Mur(Point posPlat, int w, int h):ElementDeJeu{posPlat, FL_BLACK}, r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, FL_BLACK, FL_BLACK}{}
+
+int Mur::getMyId(){
+    return 0;
+};
 
 void Mur::draw(){
     r.draw();
@@ -136,45 +181,4 @@ void Mur::DoExplosion(){}
 
 bool Mur::animation_is_complete(){
   return EXIT_SUCCESS;
-}
-
-
-void Animation::draw() {
-  for (int k=0; k<5; k++)
-    ++time;
-  Translation t3{currentBonbonMove()};
-  Rotation r{b->getPoint(), currentExplosion()};
-  b->drawWithoutAnimate();
-}
-
-Point Animation::currentBonbonMove() {
-  if (animationType==Bonbon_move){
-    if (sens==0){
-      return {0, static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
-    }
-    else if (sens==1){
-      return {0, static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6))};
-    }
-    else if (sens==2){
-      return {static_cast<int>(1*descente*sin(3.1415*time/animationTime/6)), 0};
-    }
-    else if (sens==3){
-      return {static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6)), 0};
-    }
-    
-    else
-      return {0, 0};
-  }
-  else return {0,0};
-}
-
-double Animation::currentExplosion() {
-  if (animationType==explosion)
-    return time*360.0/animationTime;
-  else
-    return 0;
-}
-
-bool Animation::isComplete() {
-  return time>60;
 }

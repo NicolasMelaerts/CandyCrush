@@ -3,6 +3,21 @@
         "*.cpp": "cpp",
         "vector": "cpp",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "type_traits": "cpp",
+        "iosfwd": "cpp",
+        "iterator": "cpp",
+        "__bit_reference": "cpp",
+        "__mutex_base": "cpp",
+        "__split_buffer": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "fstream": "cpp",
+        "functional": "cpp",
+        "memory": "cpp",
+        "stack": "cpp",
+        "string": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp"
     }
 }

@@ -11,13 +11,18 @@
 #include <random>
 #include <unistd.h>
 
-#include "PlateauDeJeu.hpp"
+#include "Jeu.hpp"
+#include "Text.hpp"
+#include "Afficher.hpp"
+#include "Control.hpp"
+#include "Menu.hpp"
 
 using namespace std;
 
 const int windowWidth=500;
-const int windowHeight=500;
+const int windowHeight=570;
 const double refreshPerSecond=60;
+
 
 
 /*-- EDIT THE FUNCTIONS HERE AND ADD YOUR OWN */
@@ -33,6 +38,7 @@ void init(){
 // Every time it starts with a blank screen
 void draw(){
 }
+
 
 // mouseMove is called every time the mouse moves
 // It is called with the current mouse position
@@ -50,7 +56,13 @@ void keyPressed(int keyCode){
 
 /* ------ DO NOT EDIT BELOW HERE (FOR NOW) ------ */
 class MainWindow : public Fl_Window {
-    Canvas c;
+
+    shared_ptr<jeu> j = make_shared<jeu>(1);
+    Canvas canvas{j};
+    ControlJeu controljeu{j};
+    AfficherScoreAndNb_coups sAndc{j};
+    Menu m;
+
     public:
     MainWindow() : Fl_Window(000, 000, windowWidth, windowHeight, "Candy Crush") {
         Fl::add_timeout(1.0/refreshPerSecond, Timer_CB, this);
@@ -58,24 +70,30 @@ class MainWindow : public Fl_Window {
     }
     void draw() override {
         Fl_Window::draw();
-        c.draw(); //Global draw function
+        canvas.draw();
+        m.draw();
+        sAndc.draw();
+        ::draw();        
     }
     int handle(int event) override {
         switch (event) {
             case FL_RELEASE:
-                c.swapElementDeJeu();
+                if (controljeu.getForDrag().size()>1)
+                    controljeu.tentativeSwap();
             case FL_MOVE:
-                c.mouseMove(Point{Fl::event_x(),Fl::event_y()});
+                controljeu.mouseMove(Point{Fl::event_x(),Fl::event_y()});
                 return 1;
             case FL_KEYDOWN:
                 keyPressed(Fl::event_key());
-            case FL_Left:
-                //c.moveBonbon(Point{Fl::event_x(),Fl::event_y()}, Fl::event_key());
-            case FL_PUSH:
-                c.mouseClick(Point{Fl::event_x(),Fl::event_y()});
+                if (Fl::event_key() == ' ' and !controljeu.get_jeu_en_cours()){
+                    m.changeNiv();
+                    controljeu.changeNiv(m.getniv());
+                }
             case FL_DRAG:
-                c.drag(Point{Fl::event_x(),Fl::event_y()});
-        }
+                controljeu.drag(Point{Fl::event_x(),Fl::event_y()});
+            case FL_PUSH:
+                return 1;
+        }   
         return 0;
     }
     static void Timer_CB(void *userdata) {

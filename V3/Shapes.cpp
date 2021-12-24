@@ -1,6 +1,12 @@
 #include "Shapes.hpp"
 
 
+/*--------------------------------------------------
+
+Rectangle class
+
+--------------------------------------------------*/
+
 Rectangle::Rectangle(Point center, int w, int h, Fl_Color frameColor, Fl_Color fillColor):
   center{center}, w{w}, h{h}, fillColor{fillColor}, frameColor{frameColor} {}
 
@@ -32,6 +38,12 @@ bool Rectangle::contains(Point p) {
          p.y<center.y+h/2;
 }
 
+
+/*--------------------------------------------------
+
+Circle class
+
+--------------------------------------------------*/
 
 
 Circle::Circle(Point center, int r,
