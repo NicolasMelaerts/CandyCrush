@@ -2,6 +2,7 @@
 #define  __ANIMATION_H__
 
 #include "ElementDeJeu.hpp"
+#include "Text.hpp"
 
 class Bonbon;
 
@@ -57,5 +58,7 @@ public:
     void draw();
     bool isComplete();
 };
+
+
 
 #endif

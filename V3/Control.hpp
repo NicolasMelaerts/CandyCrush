@@ -37,6 +37,10 @@ class ControlJeu{
         bool get_jeu_en_cours(){
             return j.get()->get_jeu_en_cours();
         }
+
+        void reset_meilleur_score(){
+            j.get()->reset_meilleur_score();
+        }
 };
 
 #endif

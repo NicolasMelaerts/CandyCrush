@@ -29,6 +29,12 @@ Point Animation::currentBonbonMove() {
     else if (sens==3){
       return {static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6)), 0};
     }
+    else if (sens==4){
+      return {static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6)), static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
+    }
+    else if (sens==5){
+      return {static_cast<int>(1*descente*sin(3.1415*time/animationTime/6)), static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
+    }
     
     else
       return {0, 0};

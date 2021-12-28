@@ -1,8 +1,8 @@
 run:
 	make main && ./main && rm *.o
 
-main: main.cpp Afficher.o Animation.o Control.o ElementDeJeu.o Jeu.o Shapes.o Text.o Menu.o Score.o
-	g++ --std='c++17' -o main main.cpp Afficher.o Animation.o Control.o ElementDeJeu.o Jeu.o Shapes.o Text.o Menu.o Score.o -lfltk
+main: main.cpp Afficher.o Animation.o Control.o ElementDeJeu.o Jeu.o Shapes.o Text.o Score.o
+	g++ --std='c++17' -o main main.cpp Afficher.o Animation.o Control.o ElementDeJeu.o Jeu.o Shapes.o Text.o Score.o -lfltk
 
 Afficher.o: Afficher.cpp Afficher.hpp
 	g++ -c --std='c++17' Afficher.cpp
@@ -24,9 +24,6 @@ Shapes.o: Shapes.cpp Jeu.hpp
 
 Text.o: Text.cpp Text.hpp
 	g++ -c --std='c++17' Text.cpp
-
-Menu.o: Menu.cpp Menu.hpp
-	g++ -c --std='c++17' Menu.cpp
 
 Score.o: Score.cpp Score.hpp
 	g++ -c --std='c++17' Score.cpp

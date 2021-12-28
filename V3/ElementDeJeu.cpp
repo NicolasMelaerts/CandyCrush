@@ -1,12 +1,13 @@
 #include "ElementDeJeu.hpp"
 
+ElementDeJeu::ElementDeJeu(Point posPlat, Fl_Color couleur):posPlat{posPlat}, couleur{couleur}{}
+
 /*--------------------------------------------------
 
 Bonbon class.
 
 --------------------------------------------------*/
 
-ElementDeJeu::ElementDeJeu(Point posPlat, Fl_Color couleur):posPlat{posPlat}, couleur{couleur}{}
 
 Bonbon::Bonbon(Point posPlat, Fl_Color couleur, int w, int h):ElementDeJeu{posPlat, couleur}, r{{50*posPlat.y+48, 50*posPlat.x+70},w,h,couleur, couleur},animation{nullptr}{}
 
@@ -165,7 +166,6 @@ void Mur::draw(){
 }
 
 
-
 void Mur::mouseClick(Point mousLoc){
 }
 
@@ -182,3 +182,33 @@ void Mur::DoExplosion(){}
 bool Mur::animation_is_complete(){
   return EXIT_SUCCESS;
 }
+
+
+/*--------------------------------------------------
+
+Glacage class. Heritage ElementDeJeu
+
+--------------------------------------------------*/
+
+Glacage::Glacage(Point posPlat, int w, int h):ElementDeJeu{posPlat, FL_WHITE}, r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, FL_WHITE, FL_WHITE}, vie{2}, animation{nullptr}{}
+
+void Glacage::draw(){
+    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});
+    r.draw();
+}
+
+int Glacage::getMyId(){
+  if (getVie()==2)
+    return 20;
+  else
+    return 21;
+}
+
+void Glacage::DoExplosion(){
+  if (getVie()==2){
+    r.setFillColor(fl_rgb_color(96,96,96));
+    r.setFrameColor(fl_rgb_color(96,96,96));
+  }
+  perdVie();
+}
+

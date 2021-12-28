@@ -27,8 +27,12 @@ class ScoreAndNbcoups{
         int get_score(){return score;};
 
         void set_meilleur_score(int new_m_score){meilleur_score = new_m_score;}
-        void write_meilleur_score(int niv);
+        void write_meilleur_score(int niv, int s);
         int get_meilleur_score(){return meilleur_score;}
+
+        void reset_nb_coup_joue(){
+            nb_coups_joue = 0;
+        }
 };
 
 #endif

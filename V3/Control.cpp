@@ -95,9 +95,6 @@ void ControlJeu::tentativeSwap(){
 
                         j.get()->echange({idx1.x,idx1.y},{idx2.x,idx2.y});
                         
-                        j.get()->set_plateau(j.get()->check_rows(j.get()->get_plateau()));
-                        j.get()->set_plateau(j.get()->check_lines(j.get()->get_plateau()));
-
                         j.get()->search_combinaison();
 
                     }

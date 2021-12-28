@@ -16,7 +16,6 @@ class ElementDeJeu{
     private:
         Point posPlat;
         Fl_Color couleur;
-        int enlenver = 0; 
 
     public:
         ElementDeJeu(Point posPlat, Fl_Color couleur);
@@ -32,13 +31,7 @@ class ElementDeJeu{
           posPlat = newPosPlat;
         };
 
-        void setEnlever(){
-                enlenver = 1;
-        }
 
-        bool getEnlever(){
-            return enlenver;
-        }
 
 
         virtual void draw()=0;
@@ -130,21 +123,37 @@ class Mur: public ElementDeJeu{
 
 };
 
-class Glacage: public ElementDeJeu{
-  private: 
-    Rectangle r;
-    int vie;
-  public:
-    Glacage(Point posPlat, int w, int h);
+/*--------------------------------------------------
 
-    void draw() override{};
-    int getMyId() override{return 100;};
-    void mouseClick(Point mouseLoc) override{};
-    void mouseMove(Point mouseLoc) override{};
-    Point getPosPlatifcontain(Point coord) override{return {-1,-1};};
-    void DoExplosion() override{};
-    void ElementMove(int sens) override{};
-    bool animation_is_complete()override{return EXIT_SUCCESS;};
+Glacage class. Heritage ElementDeJeu
+
+--------------------------------------------------*/
+
+
+class Glacage: public ElementDeJeu{
+    private:
+        Rectangle r;
+        int vie;
+        Animation *animation;
+    public:
+        Glacage(Point posPlat, int w, int h);
+
+        void draw() override;
+        int getMyId() override;
+        void mouseClick(Point mouseLoc) override{};
+        void mouseMove(Point mouseLoc) override{};
+        Point getPosPlatifcontain(Point coord) override{return {-1,-1};};
+        void DoExplosion() override;
+        void ElementMove(int sens) override{};
+        bool animation_is_complete()override{return EXIT_SUCCESS;};
+
+        int getVie(){
+            return vie;
+        }
+        void perdVie(){
+            vie--;
+        }
+
 };
 
 #endif

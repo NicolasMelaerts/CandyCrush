@@ -15,7 +15,6 @@
 #include "Text.hpp"
 #include "Afficher.hpp"
 #include "Control.hpp"
-#include "Menu.hpp"
 
 using namespace std;
 
@@ -56,12 +55,16 @@ void keyPressed(int keyCode){
 
 /* ------ DO NOT EDIT BELOW HERE (FOR NOW) ------ */
 class MainWindow : public Fl_Window {
+    EcranAccueil e{};
+    int time=0;
 
     shared_ptr<jeu> j = make_shared<jeu>(1);
+    
     Canvas canvas{j};
-    ControlJeu controljeu{j};
     AfficherScoreAndNb_coups sAndc{j};
     Menu m;
+
+    ControlJeu controljeu{j};
 
     public:
     MainWindow() : Fl_Window(000, 000, windowWidth, windowHeight, "Candy Crush") {
@@ -70,10 +73,16 @@ class MainWindow : public Fl_Window {
     }
     void draw() override {
         Fl_Window::draw();
+        if (time < 200){
+            e.draw();
+            ++time;
+        }
+        else{
         canvas.draw();
         m.draw();
         sAndc.draw();
-        ::draw();        
+        ::draw();    
+        }    
     }
     int handle(int event) override {
         switch (event) {
@@ -84,6 +93,10 @@ class MainWindow : public Fl_Window {
                 controljeu.mouseMove(Point{Fl::event_x(),Fl::event_y()});
                 return 1;
             case FL_KEYDOWN:
+                if (Fl::event_key() == 'r'){
+                    cout << "r" << endl;
+                    controljeu.reset_meilleur_score();
+                }
                 keyPressed(Fl::event_key());
                 if (Fl::event_key() == ' ' and !controljeu.get_jeu_en_cours()){
                     m.changeNiv();

@@ -56,7 +56,7 @@ class TextRectangle: public Text, public Rectangle {
   }
   void setNiveau(){
     int niv = stoi(Text::getString());
-    if (niv<3){
+    if (niv<5){
       Text::setString(to_string(niv+1));
     }
     else {

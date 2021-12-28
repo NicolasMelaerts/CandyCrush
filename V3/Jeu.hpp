@@ -11,9 +11,11 @@
 #include <array>
 #include <fstream>
 #include <stdlib.h>
+#include <algorithm>
 
 #include "ElementDeJeu.hpp"
 #include "Score.hpp"
+#include "Animation.hpp"
 
 using namespace std;
 
@@ -36,13 +38,12 @@ private:
     ScoreAndNbcoups c;
     int niv;
 
-    vector<vector<int> > plateau_glacage;
-
     void ouvertureNiv(int niv);
     void ouvertureInfo(int niv);
-    void ouvertureGlacage(int niv);
 
     bool jeu_en_cours = 0;
+
+    bool aucun_coups_poss = 0;
     
 public:
 
@@ -51,12 +52,16 @@ public:
     };
 
 
-    void setGame(int niv){
-        ouvertureNiv(niv);
-        ouvertureInfo(niv);
-        ouvertureGlacage(niv);
+    void setGame(int niveau){
+        ouvertureNiv(niveau);
+        ouvertureInfo(niveau);
         init_plateau(E);
         c.set_score(0);
+        c.reset_nb_coup_joue();
+        niv = niveau;
+        cout << "Score = " << c.get_score() << endl;
+        cout << "MeilleurScore = " << c.get_meilleur_score() << endl;
+        cout << "Coups restant  = " << c.get_nb_coups_restants() << endl;
     }
 
     shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> PtrPlateau(){
@@ -78,6 +83,18 @@ public:
                 plateau[i].push_back(E[i][j].get()->getMyId());
             }
         }
+    }
+
+    bool get_finish_fall();
+
+
+
+    bool get_aucun_coup_poss(){
+        return aucun_coups_poss;
+    }
+
+    void set_aucun_coup_poss(bool coup_poss){
+        aucun_coups_poss = coup_poss;
     }
 
     bool jeu_possible(){
@@ -108,16 +125,24 @@ public:
         return plateau[a][b];
     }
 
+    void reset_meilleur_score(){
+        c.write_meilleur_score(niv, 0);
+    }
+
 
     bool again_fall(vector< vector<shared_ptr<ElementDeJeu>> > E);
     vector<vector<int> > check_lines(vector<vector<int> > plat);
     vector<vector<int> > check_rows(vector<vector<int> > plat);
     vector<Point> setToExplose();
     void DoExplose(vector<Point> to_explose);
+    
+    void DoExploseGlacage();
 
     void search_combinaison();
-    void fall();
-    void fall_plat();
+
+
+    void fall2();
+    void fall_mur_diagonale();
     void afficher_plateau_de_jeu();
     void echange(Point a, Point b);
     bool coup_possible(Point a, Point b);
