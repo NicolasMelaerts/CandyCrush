@@ -8,7 +8,7 @@ class ElementDeJeu;
 
 /*--------------------------------------------------
 
-Translation et Rotation stuc
+Translation et Rotation structure
 
 --------------------------------------------------*/
 
@@ -51,8 +51,8 @@ private:
     ElementDeJeu *b;
     AnimationType animationType;
     int time{0};
-    Point currentBonbonMove();
-    double currentExplosion();
+    Point MoveElementDeJeu();
+    double ExploseElementDeJeu();
 public:
     Animation(ElementDeJeu *BonbonToAnimate, AnimationType animationType, int sens):b{BonbonToAnimate}, animationType{animationType}, sens{sens}{}
     void draw();

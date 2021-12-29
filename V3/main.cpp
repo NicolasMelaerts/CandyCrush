@@ -19,7 +19,7 @@
 using namespace std;
 
 const int windowWidth=500;
-const int windowHeight=570;
+const int windowHeight=600;
 const double refreshPerSecond=60;
 
 
@@ -62,7 +62,7 @@ class MainWindow : public Fl_Window {
     
     Canvas canvas{j};
     AfficherScoreAndNb_coups sAndc{j};
-    Menu m;
+    Menu m{j};
 
     ControlJeu controljeu{j};
 

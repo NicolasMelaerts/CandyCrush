@@ -1,5 +1,5 @@
 run:
-	make main && ./main && rm *.o
+	make main && ./main
 
 main: main.cpp Afficher.o Animation.o Control.o ElementDeJeu.o Jeu.o Shapes.o Text.o Score.o
 	g++ --std='c++17' -o main main.cpp Afficher.o Animation.o Control.o ElementDeJeu.o Jeu.o Shapes.o Text.o Score.o -lfltk

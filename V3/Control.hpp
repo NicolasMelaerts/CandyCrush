@@ -10,6 +10,11 @@ ControlJeu class.
 
 --------------------------------------------------*/
 
+struct DoublePoint{
+    Point p1,p2;
+};
+
+
 class ControlJeu{
     private:
         shared_ptr<jeu> j;
@@ -33,6 +38,9 @@ class ControlJeu{
         }
 
         void tentativeSwap();
+        DoublePoint inter_tentativeSwap(int idxForDrag);
+        void inter2_tentativeSwap(Point p1, Point p2, Point idx1, Point idx2);
+
 
         bool get_jeu_en_cours(){
             return j.get()->get_jeu_en_cours();
