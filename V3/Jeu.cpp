@@ -28,14 +28,27 @@ void jeu::ouvertureNiv(int niv){
                 Bonbon b{{i,j}, Colors[ajout-1], 35, 35};
                 E[i].push_back(make_shared<Bonbon>(b));
             }
+            if (ajout <= -1 && ajout >= -6){
+                BonbonSpecialHorizontal bsh{{i,j}, Colors[abs(ajout+1)%6], 40,20};
+                E[i].push_back(make_shared<BonbonSpecialHorizontal>(bsh));
+            }
+            if (ajout <= -7 && ajout >= -12){
+                BonbonSpecialVertical bsv{{i,j}, Colors[abs(ajout+1)%6], 20,40};
+                E[i].push_back(make_shared<BonbonSpecialVertical>(bsv));
+            }
             if (ajout >= -18 && ajout <= -13){
-                BonbonSpecialRond bs{{i,j}, Colors[abs(ajout+1)%6], 20};
-                E[i].push_back(make_shared<BonbonSpecialRond>(bs));
+                BonbonSpecialRond bsr{{i,j}, Colors[abs(ajout+1)%6], 20};
+                E[i].push_back(make_shared<BonbonSpecialRond>(bsr));
+            }
+            if (ajout ==-19){
+                BonbonSpecialRondCoockies bsrc{{i, j}, FL_BLACK, 20};
+                E[i].push_back(make_shared<BonbonSpecialRondCoockies>(bsrc));
             }
             if (ajout==20){
                 Glacage g{{i,j}, 45, 45};
                 E[i].push_back(make_shared<Glacage>(g));
             }
+
             j++;
         }
         Niv.close();
@@ -84,6 +97,7 @@ vector<Point> jeu::setToExplose(){
 void jeu::DoExplose(vector<Point> to_explose){
     for (auto &b: to_explose)
         E[b.x][b.y].get()->DoExplosion();
+    
     wait_anim();
     for (auto &b: to_explose)
         E[b.x][b.y].get()->setPosPlat({1000,1000});
@@ -136,7 +150,7 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
-                if (plat[j][i]!=0){ //MURs
+                if (plat[j][i]!=0 && plat[i][j]!=20 and plat[i][j]!=21){ //MURs
                     //if (i<taille_plateau-3){
                         //if (plat[j+3][i] == plat[j][i])
                             //plat[j+3][i] = -20;   // devient un bonbon spécial -> plat[j+3][i] = (plat[j+3][i]*-1)-12;
@@ -155,11 +169,11 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
 void jeu::search_combinaison(){
     set_plateau(check_rows(get_plateau()));
     set_plateau(check_lines(get_plateau()));
+    DoExploseGlacage();  
 
     while (get_finish_fall()){
         cout << "MAJ_CANVAS" << endl;
 
-        DoExploseGlacage();
         DoExplose(setToExplose());
 
         vector<vector<int >> ancien_plateau;
@@ -168,7 +182,7 @@ void jeu::search_combinaison(){
         
         while (ancien_plateau != get_plateau()){
             ancien_plateau = get_plateau();
-            fall2();
+            fall();
         }
 
         set_plateau(check_rows(get_plateau()));
@@ -184,7 +198,7 @@ void jeu::search_combinaison(){
     
 }
 
-void jeu::fall2(){
+void jeu::fall(){
      
     vector <Point> to_fall;
 
@@ -327,7 +341,8 @@ bool jeu::pas_de_coup_possible(){
     //ligne 
     for (int i=0; i<taille_plateau-1; i++){
         for (int j=0; j<taille_plateau; j++){
-            if (E[i][j].get()->getMyId() != 0 and E[i][j].get()->getMyId() != 20 and E[i][j].get()->getMyId() != 21)
+            if (E[i][j].get()->getMyId() != 0 and E[i][j].get()->getMyId() != 20 and E[i][j].get()->getMyId() != 21
+            and E[i+1][j].get()->getMyId() != 0 and E[i+1][j].get()->getMyId() != 20 and E[i+1][j].get()->getMyId() != 21)
                 if (coup_possible({i,j},{i+1, j}))
                     return true;
         }
@@ -336,7 +351,8 @@ bool jeu::pas_de_coup_possible(){
     //colonne
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-1; j++){
-            if (E[i][j].get()->getMyId() != 0 and E[i][j].get()->getMyId() != 20 and E[i][j].get()->getMyId() != 21)
+            if (E[i][j].get()->getMyId() != 0 and E[i][j].get()->getMyId() != 20 and E[i][j].get()->getMyId() != 21
+            and E[i][j+1].get()->getMyId() != 0 and E[i][j+1].get()->getMyId() != 20 and E[i][j+1].get()->getMyId() != 21)
                 if (coup_possible({i,j},{i, j+1}))
                     return true;
         }

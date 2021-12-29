@@ -26,7 +26,7 @@ void Canvas::draw(){
     }
     if (!j.get()->jeu_possible()){
 
-        Text("FINI, CHANGE DE NIV AVEC ESPACE", {250, 200}, 25, FL_BLACK).draw();
+        Text("FINI, CHANGE DE NIV AVEC ESPACE", {250, 180}, 25, FL_BLACK).draw();
     }
 }
 

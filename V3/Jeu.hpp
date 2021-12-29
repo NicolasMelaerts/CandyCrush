@@ -130,9 +130,11 @@ public:
     }
 
 
-    bool again_fall(vector< vector<shared_ptr<ElementDeJeu>> > E);
     vector<vector<int> > check_lines(vector<vector<int> > plat);
     vector<vector<int> > check_rows(vector<vector<int> > plat);
+
+    void check_coockie();
+
     vector<Point> setToExplose();
     void DoExplose(vector<Point> to_explose);
     
@@ -141,7 +143,7 @@ public:
     void search_combinaison();
 
 
-    void fall2();
+    void fall();
     void fall_mur_diagonale();
     void afficher_plateau_de_jeu();
     void echange(Point a, Point b);

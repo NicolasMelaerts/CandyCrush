@@ -18,8 +18,9 @@ class ElementDeJeu{
         Fl_Color couleur;
 
     public:
+        Animation *animation;
+
         ElementDeJeu(Point posPlat, Fl_Color couleur);
-    
         Point getPoint(){
             return {50*posPlat.y+48, 50*posPlat.x+70};
         }
@@ -32,9 +33,8 @@ class ElementDeJeu{
         };
 
 
-
-
         virtual void draw()=0;
+        virtual void drawWithoutAnimate()=0;
         virtual int getMyId()=0;
         virtual void mouseClick(Point mouseLoc)=0;
         virtual void mouseMove(Point mouseLoc)=0;
@@ -58,14 +58,17 @@ Bonbon class. Heritage ElementDeJeu
 class Bonbon: public ElementDeJeu{
     private:
         Rectangle r;
-        Animation *animation;
     
     public:
         Bonbon(Point posPlat, Fl_Color couleur, int w, int h);
 
+        Rectangle getR(){
+            return r;
+        }
+
         void draw() override;
         int getMyId() override;
-        void drawWithoutAnimate();
+        void drawWithoutAnimate() override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
@@ -83,19 +86,18 @@ BonbonSpecialRond class. Heritage ElementDeJeu
 class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
     private:
         Circle c;
-        Animation *animation;
 
     public:
         BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r);
 
         void draw() override;
         int getMyId() override;
-        void drawWithoutAnimate();
+        void drawWithoutAnimate() override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
         void DoExplosion() override;
-        void ElementMove(int sens) override{};
+        void ElementMove(int sens) override;
         bool animation_is_complete() override;
 
 };
@@ -113,6 +115,7 @@ class Mur: public ElementDeJeu{
         Mur(Point posPlat, int w, int h);
 
         void draw() override;
+        void drawWithoutAnimate() override{};
         int getMyId() override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
@@ -139,6 +142,7 @@ class Glacage: public ElementDeJeu{
         Glacage(Point posPlat, int w, int h);
 
         void draw() override;
+        void drawWithoutAnimate() override{};
         int getMyId() override;
         void mouseClick(Point mouseLoc) override{};
         void mouseMove(Point mouseLoc) override{};
@@ -154,6 +158,71 @@ class Glacage: public ElementDeJeu{
             vie--;
         }
 
+};
+
+/*--------------------------------------------------
+
+Bonbon spécial horizontaux
+
+--------------------------------------------------*/
+
+
+class BonbonSpecialHorizontal: public Bonbon{
+    private:
+
+    public:
+    BonbonSpecialHorizontal(Point posPlat, Fl_Color couleur, int w, int h):Bonbon(posPlat, couleur, w, h){}
+
+    int getMyId() override{
+        int c = getR().getFillColor();
+        if (c==FL_RED){return -1;}
+        if (c==FL_BLUE){return -2;}
+        if (c==FL_YELLOW){return -3;}
+        if (c==FL_GREEN){return -4;}
+        if (c==FL_MAGENTA){return -5;}
+        else {return -6;} // (c==fl_rgb_color(251, 139, 35))
+    }
+};
+
+/*--------------------------------------------------
+
+Bonbon spécial vertical
+
+--------------------------------------------------*/
+
+class BonbonSpecialVertical: public Bonbon{
+    private:
+
+    public:
+    BonbonSpecialVertical(Point posPlat, Fl_Color couleur, int w, int h):Bonbon(posPlat, couleur, w, h){}
+
+    int getMyId() override{
+        int c = getR().getFillColor();
+        if (c==FL_RED){return -7;}
+        if (c==FL_BLUE){return -8;}
+        if (c==FL_YELLOW){return -9;}
+        if (c==FL_GREEN){return -10;}
+        if (c==FL_MAGENTA){return -11;}
+        else {return -12;} // (c==fl_rgb_color(251, 139, 35))
+    }
+};
+
+/*--------------------------------------------------
+
+Coockies
+
+--------------------------------------------------*/
+
+
+class BonbonSpecialRondCoockies: public BonbonSpecialRond{
+    private:
+
+    public:
+    BonbonSpecialRondCoockies(Point posPlat, Fl_Color couleur, int r):BonbonSpecialRond(posPlat, couleur, r){}
+
+    int getMyId() override{
+        return -19;
+    }
 };
 
 #endif

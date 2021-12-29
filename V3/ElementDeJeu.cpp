@@ -1,6 +1,6 @@
 #include "ElementDeJeu.hpp"
 
-ElementDeJeu::ElementDeJeu(Point posPlat, Fl_Color couleur):posPlat{posPlat}, couleur{couleur}{}
+ElementDeJeu::ElementDeJeu(Point posPlat, Fl_Color couleur):posPlat{posPlat}, couleur{couleur}, animation{nullptr}{}
 
 /*--------------------------------------------------
 
@@ -9,7 +9,7 @@ Bonbon class.
 --------------------------------------------------*/
 
 
-Bonbon::Bonbon(Point posPlat, Fl_Color couleur, int w, int h):ElementDeJeu{posPlat, couleur}, r{{50*posPlat.y+48, 50*posPlat.x+70},w,h,couleur, couleur},animation{nullptr}{}
+Bonbon::Bonbon(Point posPlat, Fl_Color couleur, int w, int h):ElementDeJeu{posPlat, couleur}, r{{50*posPlat.y+48, 50*posPlat.x+70},w,h,couleur, couleur}{}
 
 int Bonbon::getMyId(){
   int c = r.getFillColor();
@@ -86,7 +86,7 @@ BonbonSpecialRond class.
 
 --------------------------------------------------*/
 
-BonbonSpecialRond::BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r):ElementDeJeu{posPlat, couleur}, c{{50*posPlat.y+48, 50*posPlat.x+70}, r, couleur, couleur},animation{nullptr}{}
+BonbonSpecialRond::BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r):ElementDeJeu{posPlat, couleur}, c{{50*posPlat.y+48, 50*posPlat.x+70}, r, couleur, couleur}{}
 
 int BonbonSpecialRond::getMyId(){
   int couleur = c.getFillColor();
@@ -132,6 +132,12 @@ void BonbonSpecialRond::mouseMove(Point mouseLoc){
     else{
       c.setFrameColor(c.getFillColor());
     }
+}
+
+void BonbonSpecialRond::ElementMove(int sens){
+  if (!animation){
+    animation = new Animation(this, static_cast<Animation::AnimationType>(1), sens);
+  }
 }
 
 Point BonbonSpecialRond::getPosPlatifcontain(Point coord){
@@ -190,7 +196,7 @@ Glacage class. Heritage ElementDeJeu
 
 --------------------------------------------------*/
 
-Glacage::Glacage(Point posPlat, int w, int h):ElementDeJeu{posPlat, FL_WHITE}, r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, FL_WHITE, FL_WHITE}, vie{2}, animation{nullptr}{}
+Glacage::Glacage(Point posPlat, int w, int h):ElementDeJeu{posPlat, FL_WHITE}, r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, FL_WHITE, FL_WHITE}, vie{2}{}
 
 void Glacage::draw(){
     r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});

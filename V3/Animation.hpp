@@ -4,7 +4,7 @@
 #include "ElementDeJeu.hpp"
 #include "Text.hpp"
 
-class Bonbon;
+class ElementDeJeu;
 
 /*--------------------------------------------------
 
@@ -48,17 +48,16 @@ private:
     const int animationTime = 60;
     const int descente = 100;
     int sens;
-    Bonbon *b;
+    ElementDeJeu *b;
     AnimationType animationType;
     int time{0};
     Point currentBonbonMove();
     double currentExplosion();
 public:
-    Animation(Bonbon *BonbonToAnimate, AnimationType animationType, int sens):b{BonbonToAnimate}, animationType{animationType}, sens{sens}{}
+    Animation(ElementDeJeu *BonbonToAnimate, AnimationType animationType, int sens):b{BonbonToAnimate}, animationType{animationType}, sens{sens}{}
     void draw();
     bool isComplete();
 };
-
 
 
 #endif
