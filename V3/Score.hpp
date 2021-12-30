@@ -22,7 +22,7 @@ class ScoreAndNbcoups{
         void set_nb_coups_restants(int new_nb_coups){nb_coups_restants = new_nb_coups;}
         int get_nb_coups_restants(){return nb_coups_restants;}
 
-        void augmente_score(int niv);
+        void augmente_score(int niv, int point);
         void set_score(int new_score){score = new_score;};
         int get_score(){return score;};
 

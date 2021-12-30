@@ -137,7 +137,6 @@ class Glacage: public ElementDeJeu{
     private:
         Rectangle r;
         int vie;
-        Animation *animation;
     public:
         Glacage(Point posPlat, int w, int h);
 
@@ -214,15 +213,44 @@ Coockies
 --------------------------------------------------*/
 
 
-class BonbonSpecialRondCoockies: public BonbonSpecialRond{
+class BonbonSpecialRondCookies: public BonbonSpecialRond{
     private:
 
     public:
-    BonbonSpecialRondCoockies(Point posPlat, Fl_Color couleur, int r):BonbonSpecialRond(posPlat, couleur, r){}
+    BonbonSpecialRondCookies(Point posPlat, Fl_Color couleur, int r):BonbonSpecialRond(posPlat, couleur, r){}
 
     int getMyId() override{
         return -19;
     }
+};
+
+
+/*--------------------------------------------------
+
+Ingrédients
+
+--------------------------------------------------*/
+
+class Ingredient: public ElementDeJeu{
+    private:
+    TextRectangle r;
+
+    public:
+    Ingredient(Point posPlat, string s, int w, int h):ElementDeJeu(posPlat, FL_WHITE), r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, s, 20}{}
+
+    void draw() override;
+    void drawWithoutAnimate() override;
+
+    int getMyId() override{
+        return 30;
+    }
+    void mouseClick(Point mouseLoc) override;
+    void mouseMove(Point mouseLoc) override;
+    Point getPosPlatifcontain(Point coord) override;
+    void DoExplosion() override{};
+    void ElementMove(int sens) override;
+    bool animation_is_complete()override;
+
 };
 
 #endif

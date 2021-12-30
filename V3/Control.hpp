@@ -11,7 +11,7 @@ ControlJeu class.
 --------------------------------------------------*/
 
 struct DoublePoint{
-    Point p1,p2;
+    Point point1,point2;
 };
 
 
@@ -38,8 +38,9 @@ class ControlJeu{
         }
 
         void tentativeSwap();
-        DoublePoint inter_tentativeSwap(int idxForDrag);
-        void inter2_tentativeSwap(Point p1, Point p2, Point idx1, Point idx2);
+        DoublePoint findBonbonToSwap(int idxForDrag);
+        void SwapIfCoupPossible(Point p1, Point p2, Point idx1, Point idx2);
+        void SwapBonbonAnim(Point p1, Point p2, Point idx1, Point idx2);
 
 
         bool get_jeu_en_cours(){

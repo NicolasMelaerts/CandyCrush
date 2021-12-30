@@ -102,7 +102,7 @@ void EcranAccueil::draw(){
         g.draw();
         Glacage{{3,3}, 45, 45}.draw();
 
-        Text("Bonbons spéciaux:", {90,290},20).draw();
+        Text("Bonbons spéciaux :", {90,290},20).draw();
 
         Text("Bonbons emballés", {90,320},15).draw();
         BonbonSpecialRond{{5,3}, FL_RED, 22}.draw();
@@ -129,5 +129,11 @@ void EcranAccueil::draw(){
         BonbonSpecialHorizontal{{7,8}, fl_rgb_color(251, 139, 35), 40,20}.draw();
 
         Text("Cookie", {90,470},15).draw();
-        BonbonSpecialRondCoockies{{8,3}, FL_BLACK, 22}.draw();
+        BonbonSpecialRondCookies{{8,3}, FL_BLACK, 22}.draw();
+
+        Text("Ingrédients : ", {90,520},20).draw();
+        Text("(C = cerise)", {90,540},15).draw();
+        Text("(N = noisette)", {90,560},15).draw();
+        Ingredient{{9,3},"C", 20, 20}.draw();
+        Ingredient{{9,4},"N", 20, 20}.draw();
     }

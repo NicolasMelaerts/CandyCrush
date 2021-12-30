@@ -24,7 +24,7 @@ void ControlJeu::mouseClick(Point mouseLoc){
 }
 
 
-DoublePoint ControlJeu::inter_tentativeSwap(int idxForDrag){
+DoublePoint ControlJeu::findBonbonToSwap(int idxForDrag){
     Point p;
     Point idx;
 
@@ -46,59 +46,70 @@ DoublePoint ControlJeu::inter_tentativeSwap(int idxForDrag){
     return {p, idx};
 }
 
-void ControlJeu::inter2_tentativeSwap(Point p1, Point p2, Point idx1, Point idx2){
-                    j.get()->set_jeu_est_en_cours(1);
+void ControlJeu::SwapBonbonAnim(Point p1_debut, Point p1_fin, Point p2_debut, Point p2_fin){
+    j.get()->set_jeu_est_en_cours(1);
 
-                    if (p1.x == p2.x && p1.y == p2.y+1){
-                        ptrPlateau.get()->at(idx1.x).at(idx1.y).get()->ElementMove(3);
-                        ptrPlateau.get()->at(idx2.x).at(idx2.y).get()->ElementMove(2);
-                    }
-                    if (p1.x == p2.x && p1.y == p2.y-1){
-                        ptrPlateau.get()->at(idx1.x).at(idx1.y).get()->ElementMove(2);
-                        ptrPlateau.get()->at(idx2.x).at(idx2.y).get()->ElementMove(3);
-                    }
-                    if (p1.x == p2.x+1 && p1.y == p2.y){
-                        ptrPlateau.get()->at(idx1.x).at(idx1.y).get()->ElementMove(1);
-                        ptrPlateau.get()->at(idx2.x).at(idx2.y).get()->ElementMove(0);
-                    }
-                    if (p1.x == p2.x-1 && p1.y == p2.y){
-                        ptrPlateau.get()->at(idx1.x).at(idx1.y).get()->ElementMove(0);
-                        ptrPlateau.get()->at(idx2.x).at(idx2.y).get()->ElementMove(1);
-                    }
+    if (p1_debut.x == p1_fin.x && p1_debut.y == p1_fin.y+1){
+        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(3);
+        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(2);
+    }
+    if (p1_debut.x == p1_fin.x && p1_debut.y == p1_fin.y-1){
+        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(2);
+        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(3);
+    }
+    if (p1_debut.x == p1_fin.x+1 && p1_debut.y == p1_fin.y){
+        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(1);
+        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(0);
+    }
+    if (p1_debut.x == p1_fin.x-1 && p1_debut.y == p1_fin.y){
+        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(0);
+        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(1);
+    }
                     
-                    j.get()->wait_anim();
+    j.get()->wait_anim();
+                 
+}
 
-                    if (j.get()->coup_possible({p1.x, p1.y}, {p2.x, p2.y})){
+void ControlJeu::SwapIfCoupPossible(Point p1_debut, Point p1_fin, Point p2_debut, Point p2_fin){
+    ptrPlateau = j.get()->PtrPlateau();
+    cout << ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId();
+    if (j.get()->coup_possible({p1_debut.x, p1_debut.y}, {p1_fin.x, p1_fin.y}) or ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId()== -19 or ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId()==-19){
 
-                        ptrPlateau.get()->at(idx1.x).at(idx1.y).get()->setPosPlat(p2);
-                        ptrPlateau.get()->at(idx2.x).at(idx2.y).get()->setPosPlat(p1);
+        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->setPosPlat(p1_fin);
+        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->setPosPlat(p1_debut);
 
-                        j.get()->echange({idx1.x,idx1.y},{idx2.x,idx2.y});
+        j.get()->echange({p2_debut.x,p2_debut.y},{p2_fin.x,p2_fin.y});
                         
-                        j.get()->search_combinaison();
+        if (ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId()== -19){
+            j.get()->coup_cookie(ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId(), p2_fin);
+        }
+        if (ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId()==-19){
+            j.get()->coup_cookie(ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId(), p2_debut);
+        }
 
-                    }
-                    
+        j.get()->search_combinaison();
+    }  
 }
 
 void ControlJeu::tentativeSwap(){
     if (j.get()->jeu_possible()){
         ptrPlateau=j.get()->PtrPlateau();
 
-        DoublePoint w{inter_tentativeSwap(0)};
-        DoublePoint w1{inter_tentativeSwap(ForDrag.size()-1)};
+        DoublePoint debut{findBonbonToSwap(0)};
+        DoublePoint fin{findBonbonToSwap(ForDrag.size()-1)};
 
-        Point p1{w.p1}, p2{w1.p1}, idx1{w.p2}, idx2{w1.p2};
+        Point p1_debut{debut.point1}, p1_fin{fin.point1}, p2_debut{debut.point2}, p2_fin{fin.point2};
 
 
-        cout << idx1.x << ", "<< idx1.y << endl;
-        cout << idx2.x << ", "<< idx2.y << endl;
-        cout << p1.x << ", "<< p1.y << endl;
-        cout << p2.x << ", "<< p2.y << endl;
+        cout << p2_debut.x << ", "<< p2_debut.y << endl;
+        cout << p2_fin.x << ", "<< p2_fin.y << endl;
+        cout << p1_debut.x << ", "<< p1_debut.y << endl;
+        cout << p1_fin.x << ", "<< p1_fin.y << endl;
 
-        if (p1.x != -1 && p2.x != -1){
-            if ((p1.x == p2.x and p1.y == p2.y+1) || (p1.x == p2.x and p1.y == p2.y-1) || (p1.x == p2.x+1 and p1.y == p2.y) || (p1.x == p2.x-1 and p1.y == p2.y)){
-                inter2_tentativeSwap(p1, p2,idx1, idx2);
+        if (p1_debut.x != -1 && p1_fin.x != -1){
+            if ((p1_debut.x == p1_fin.x and p1_debut.y == p1_fin.y+1) || (p1_debut.x == p1_fin.x and p1_debut.y == p1_fin.y-1) || (p1_debut.x == p1_fin.x+1 and p1_debut.y == p1_fin.y) || (p1_debut.x == p1_fin.x-1 and p1_debut.y == p1_fin.y)){
+                SwapBonbonAnim(p1_debut, p1_fin,p2_debut, p2_fin);
+                SwapIfCoupPossible(p1_debut, p1_fin,p2_debut, p2_fin);
             }
         }
         if (!j.get()->jeu_possible())

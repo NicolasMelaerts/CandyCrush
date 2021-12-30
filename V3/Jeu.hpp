@@ -29,22 +29,20 @@ class jeu{
 private:
     vector<vector<int> > plateau;
     vector< vector<shared_ptr<ElementDeJeu>> > E;
+    vector<Fl_Color > Colors{FL_RED, FL_BLUE,FL_YELLOW, FL_GREEN, FL_MAGENTA, fl_rgb_color(251, 139, 35)};
+
+    ScoreAndNbcoups c;
     
 
     int taille_plateau = 9;
     int nb_couleurs_bonbon = 6;
-    vector<Fl_Color > Colors{FL_RED, FL_BLUE,FL_YELLOW, FL_GREEN, FL_MAGENTA, fl_rgb_color(251, 139, 35)};
-
-    ScoreAndNbcoups c;
     int niv;
+    bool jeu_en_cours = 0;
+    bool aucun_coups_poss = 0;
 
     void ouvertureNiv(int niv);
     void ouvertureInfo(int niv);
 
-    bool jeu_en_cours = 0;
-
-    bool aucun_coups_poss = 0;
-    
 public:
 
     jeu(int niv):c{0,0}, niv{niv}{
@@ -75,19 +73,6 @@ public:
     vector<vector<int> > get_plateau(){
         return plateau;
     }
-    void init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E){
-        plateau.clear();
-        for (int i =0; i<taille_plateau; i++){
-            plateau.push_back({});
-            for (int j=0; j<taille_plateau; j++){
-                plateau[i].push_back(E[i][j].get()->getMyId());
-            }
-        }
-    }
-
-    bool get_finish_fall();
-
-
 
     bool get_aucun_coup_poss(){
         return aucun_coups_poss;
@@ -129,28 +114,34 @@ public:
         c.write_meilleur_score(niv, 0);
     }
 
+    void init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E);
 
+    void search_combinaison();
     vector<vector<int> > check_lines(vector<vector<int> > plat);
     vector<vector<int> > check_rows(vector<vector<int> > plat);
 
-    void check_coockie();
+    void check_5bonbons();
+    void coup_cookie(int id, Point cookie_to_delete);
+    void check_4bonbons();
+
+    void echange(Point a, Point b);
+    bool coup_possible(Point a, Point b);
+    bool coup_possible();
+    void melanger();    // si pas la poss de faire une combi de 3 bonbons
+
 
     vector<Point> setToExplose();
     void DoExplose(vector<Point> to_explose);
-    
     void DoExploseGlacage();
-
-    void search_combinaison();
+    void check_ingredient();
 
 
     void fall();
     void fall_mur_diagonale();
+    bool get_finish_fall();
+
+
     void afficher_plateau_de_jeu();
-    void echange(Point a, Point b);
-    bool coup_possible(Point a, Point b);
-    
-    bool pas_de_coup_possible();
-    void melanger();    // si pas la poss de faire une combi de 3 bonbons
 
     void wait_anim();
 };

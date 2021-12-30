@@ -41,8 +41,16 @@ void jeu::ouvertureNiv(int niv){
                 E[i].push_back(make_shared<BonbonSpecialRond>(bsr));
             }
             if (ajout ==-19){
-                BonbonSpecialRondCoockies bsrc{{i, j}, FL_BLACK, 20};
-                E[i].push_back(make_shared<BonbonSpecialRondCoockies>(bsrc));
+                BonbonSpecialRondCookies bsrc{{i, j}, FL_BLACK, 20};
+                E[i].push_back(make_shared<BonbonSpecialRondCookies>(bsrc));
+            }
+            if (ajout ==30){ // cerise
+                Ingredient ingr{{i, j}, "C", 20, 20};
+                E[i].push_back(make_shared<Ingredient>(ingr));
+            }
+            if (ajout ==31){ //noisette
+                Ingredient ingr{{i, j}, "N", 20, 20};
+                E[i].push_back(make_shared<Ingredient>(ingr));
             }
             if (ajout==20){
                 Glacage g{{i,j}, 45, 45};
@@ -87,7 +95,7 @@ vector<Point> jeu::setToExplose(){
         for (int k = 0; k<9;k++){
             if (getelemplateau(i,k)==-20){
                 to_explose.push_back({i,k});
-                c.augmente_score(niv);
+                c.augmente_score(niv, 100);
             }   
         }
     }
@@ -108,14 +116,17 @@ void jeu::DoExploseGlacage(){
         for (int k=0; k<get_taille_plateau(); k++){
             if (plateau[i][k] == 20){
                 if (plateau[i+1][k] == -20 or plateau[i-1][k] == -20 or plateau[i][k+1] == -20 or plateau[i][k-1] == -20){
+                    cout << i << ", " << k<< endl;
                     if (E[i][k].get()->getMyId() == 20){
                         E[i][k].get()->DoExplosion();
+                        c.augmente_score(niv, 150);
                     }
                     else{
                         plateau[i][k] = -20;
                         E[i][k].get()->setPosPlat({1000,1000});
-                        
+                        c.augmente_score(niv, 250);
                     }
+                    
                 }
             }
 
@@ -123,13 +134,27 @@ void jeu::DoExploseGlacage(){
     }
 }
 
+void jeu::check_ingredient(){
+    for (int i=0; i<get_taille_plateau(); i++){
+        for (int k=0; k<get_taille_plateau(); k++){
+            if (plateau[i][k]==30){
+                if (i==8){
+                    plateau[i][k] = -20;
+                    E[i][k].get()->setPosPlat({1000,1000});
+                    c.augmente_score(niv, 300);
+                }
+            }
+        }
+    } 
+}
+
+
+
 vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
-    cout << "check_lines" << endl;
-    afficher_plateau_de_jeu();
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]&&plat[i][j+1] == plat[i][j+2]){ // si a = b et a = c alors b = c
-                if (plat[i][j] != 0){ // MURs
+                if (plat[i][j] != 0 && plat[i][j]!=20 and plat[i][j]!=21 && plat[i][j]!=30){ // MURs
                     //if (j<taille_plateau-3){
                         //if (plat[i][j+3] == plat[j][i]){
                             //plat[i][j+3] = -20;  //devient un bonbon spécial -> (plat[i][j+3]*-1)-12;
@@ -146,11 +171,10 @@ vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
 }
 
 vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
-    cout << "check rows"<< endl;
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
-                if (plat[j][i]!=0 && plat[i][j]!=20 and plat[i][j]!=21){ //MURs
+                if (plat[j][i]!=0 && plat[j][i]!=20 and plat[j][i]!=21 && plat[i][j]!=30){ //MURs
                     //if (i<taille_plateau-3){
                         //if (plat[j+3][i] == plat[j][i])
                             //plat[j+3][i] = -20;   // devient un bonbon spécial -> plat[j+3][i] = (plat[j+3][i]*-1)-12;
@@ -165,8 +189,105 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     return plat;
 }
 
+void jeu::coup_cookie(int id, Point cookie_to_delete){
+    for (int i=0; i<taille_plateau; i++){
+        for (int j=0; j<taille_plateau; j++){
+            if (E[i][j].get()->getMyId()==id){
+                plateau[i][j] = -20;
+            }
+        }
+    }
+    plateau[cookie_to_delete.x][cookie_to_delete.y] = -20;
+}
+
+void jeu::check_5bonbons(){
+    for (int i=0; i<taille_plateau; i++){
+        for (int j=0; j<taille_plateau-4; j++){
+            //horizontal
+            if (plateau[i][j] == plateau[i][j+1] && plateau[i][j] == plateau[i][j+2] && plateau[i][j] == plateau[i][j+3] && plateau[i][j] == plateau[i][j+4]){ // si a = b et a = c alors b = c
+                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){ // MURs
+
+                    plateau[i][j] = -20;
+                    plateau[i][j+1] = -20;
+
+                    plateau[i][j+2] = 19;
+                    BonbonSpecialRondCookies bsrc{{i, j+2}, FL_BLACK, 20};
+                    E[i][j+2] = make_shared<BonbonSpecialRondCookies>(bsrc);
+
+                    plateau[i][j+3] = -20;
+                    plateau[i][j+4] = -20;
+                }
+            }
+            if (plateau[j][i] == plateau[j+1][i] && plateau[j][i] == plateau[j+2][i] && plateau[j][i] == plateau[j+3][i] && plateau[j][i] == plateau[j+4][i]){ // si a = b et a = c alors b = c
+                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[j][i]!=-20){ // MURs
+
+                    plateau[j][i] = -20;
+                    plateau[j+1][i] = -20;
+
+                    plateau[j+2][i] = 19;
+                    BonbonSpecialRondCookies bsrc{{j+2, i}, FL_BLACK, 20};
+                    E[j+2][i] = make_shared<BonbonSpecialRondCookies>(bsrc);
+
+                    plateau[j+3][i] = -20;
+                    plateau[j+4][i] = -20;
+                }
+            }
+        }
+    }
+}
+
+void jeu::check_4bonbons(){
+    for (int i=0; i<taille_plateau; i++){
+        for (int j=0; j<taille_plateau-4; j++){
+            //horizontal
+            if (plateau[i][j] == plateau[i][j+1] && plateau[i][j] == plateau[i][j+2] && plateau[i][j] == plateau[i][j+3]){
+                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){ // MURs
+
+                    plateau[i][j] = -20;
+                    plateau[i][j+1] = -20;
+
+                    plateau[i][j+2] = ((E[i][j].get()->getMyId())*-1);
+
+                    BonbonSpecialHorizontal bsh{{i,j+2}, Colors[E[i][j].get()->getMyId()-1], 40,20};
+                    E[i][j+2] = make_shared<BonbonSpecialHorizontal>(bsh);
+
+                    plateau[i][j+3] = -20;
+                }
+            }
+            if (plateau[j][i] == plateau[j+1][i] && plateau[j][i] == plateau[j+2][i] && plateau[j][i] == plateau[j+3][i]){
+                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[i][j]!=-20){ // MURs
+
+                    plateau[j][i] = -20;
+                    plateau[j+1][i] = -20;
+
+                    plateau[j+2][i] = ((E[i][j].get()->getMyId())*-1)-6;
+                    BonbonSpecialVertical bsv{{j+2,i}, Colors[E[j][i].get()->getMyId()-1], 20,40};
+                    E[j+2][i] = make_shared<BonbonSpecialVertical>(bsv);
+
+                    plateau[j+3][i] = -20;
+                }
+            }
+        }
+    }
+}
+
+
+void jeu::init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E){
+    plateau.clear();
+    for (int i =0; i<taille_plateau; i++){
+        plateau.push_back({});
+        for (int j=0; j<taille_plateau; j++){
+            plateau[i].push_back(E[i][j].get()->getMyId());
+        }
+    }
+}
+
 
 void jeu::search_combinaison(){
+    
+    check_5bonbons();
+    check_4bonbons();
+
     set_plateau(check_rows(get_plateau()));
     set_plateau(check_lines(get_plateau()));
     DoExploseGlacage();  
@@ -184,11 +305,13 @@ void jeu::search_combinaison(){
             ancien_plateau = get_plateau();
             fall();
         }
+        check_ingredient();
 
+        check_5bonbons();
         set_plateau(check_rows(get_plateau()));
         set_plateau(check_lines(get_plateau()));
 
-        while (!pas_de_coup_possible()){  
+        while (!coup_possible()){  
             cout << "Auncun coup possible on melange" << endl;
             set_aucun_coup_poss(1);
             melanger();
@@ -202,8 +325,6 @@ void jeu::fall(){
      
     vector <Point> to_fall;
 
-    cout << "FALL 22222" << endl;
-    afficher_plateau_de_jeu();
 
     for (int i=0; i<get_taille_plateau(); i++){
         for (int k=0; k<get_taille_plateau()-1; k++){
@@ -336,7 +457,7 @@ void jeu::wait_anim(){
         }
 }
 
-bool jeu::pas_de_coup_possible(){
+bool jeu::coup_possible(){
 
     //ligne 
     for (int i=0; i<taille_plateau-1; i++){

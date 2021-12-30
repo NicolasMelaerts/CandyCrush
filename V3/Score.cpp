@@ -2,8 +2,8 @@
 
 
 
-void ScoreAndNbcoups::augmente_score(int niv){
-    score += 100;
+void ScoreAndNbcoups::augmente_score(int niv, int point){
+    score += point;
     if (score>meilleur_score){
         write_meilleur_score(niv, score);
     }

@@ -123,7 +123,7 @@ void BonbonSpecialRond::mouseClick(Point mouseLoc){
 
 void BonbonSpecialRond::mouseMove(Point mouseLoc){
     if (c.contains(mouseLoc)){
-      if (c.getFillColor() == 88 or c.getFillColor() == 216 or c.getFillColor() == 248){
+      if (c.getFillColor() == 88 or c.getFillColor() == 216 or c.getFillColor() == 248 or c.getFillColor()==FL_BLACK){
         c.setFrameColor(FL_WHITE);
       } else{
         c.setFrameColor(FL_BLACK);
@@ -218,3 +218,63 @@ void Glacage::DoExplosion(){
   perdVie();
 }
 
+/*--------------------------------------------------
+
+Ingredient class. Heritage ElementDeJeu
+
+--------------------------------------------------*/
+
+
+void Ingredient::draw(){
+  if (animation && animation->isComplete()){
+    delete animation;
+    animation = nullptr;
+  }
+  if (animation)
+    animation->draw();
+  else
+    drawWithoutAnimate();
+}
+
+void Ingredient::drawWithoutAnimate(){
+    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});
+    r.setCenter({50*getposPlat().y+48, 50*getposPlat().x+70});
+    r.draw();
+}
+
+void Ingredient::mouseClick(Point mouseLoc){
+    if (r.contains(mouseLoc)){
+        cout << "Je suis un ingrédient" << endl;
+    }
+}
+
+void Ingredient::mouseMove(Point mouseLoc){
+    if (r.contains(mouseLoc)){
+      if (r.getFillColor() == 88 or r.getFillColor() == 216 or r.getFillColor() == 248){
+        r.setFrameColor(FL_WHITE);
+      } else{
+        r.setFrameColor(FL_BLACK);
+      }
+    }
+    else{
+      r.setFrameColor(r.getFillColor());
+    }
+}
+
+Point Ingredient::getPosPlatifcontain(Point coord){
+  if (r.contains(coord)){
+    return getposPlat();
+  }
+  return {-1, -1};
+}
+
+
+void Ingredient::ElementMove(int sens){
+  if (!animation){
+    animation = new Animation(this, static_cast<Animation::AnimationType>(1), sens);
+  }
+}
+
+bool Ingredient::animation_is_complete(){
+  return animation;
+}

@@ -45,6 +45,13 @@ class Text {
   }
 };
 
+/*--------------------------------------------------
+
+TextRectangle class.
+
+
+--------------------------------------------------*/
+
 
 class TextRectangle: public Text, public Rectangle {
  public:
