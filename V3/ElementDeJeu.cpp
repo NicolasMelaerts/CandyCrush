@@ -21,6 +21,10 @@ int Bonbon::getMyId(){
   else {return 6;} // (c==fl_rgb_color(251, 139, 35))
 };
 
+Fl_Color Bonbon::getcouleur(){
+  return r.getFillColor();
+}
+
 void Bonbon::draw(){
   if (animation && animation->isComplete()){
     delete animation;
@@ -96,8 +100,11 @@ int BonbonSpecialRond::getMyId(){
   if (couleur==FL_GREEN){return -16;}
   if (couleur==FL_MAGENTA){return -17;}
   else {return -18;} //(couleur==fl_rgb_color(251, 139, 35))
-
 };
+
+Fl_Color BonbonSpecialRond::getcouleur(){
+  return c.getFillColor();
+}
 
 void BonbonSpecialRond::draw(){
   if (animation && animation->isComplete()){
@@ -167,6 +174,10 @@ int Mur::getMyId(){
     return 0;
 };
 
+Fl_Color Mur::getcouleur(){
+  return r.getFillColor();
+}
+
 void Mur::draw(){
     r.draw();
 }
@@ -208,6 +219,10 @@ int Glacage::getMyId(){
     return 20;
   else
     return 21;
+}
+
+Fl_Color Glacage::getcouleur(){
+  return r.getFillColor();
 }
 
 void Glacage::DoExplosion(){

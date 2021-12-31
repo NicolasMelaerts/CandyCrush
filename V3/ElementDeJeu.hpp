@@ -3,6 +3,7 @@
 
 #include "Shapes.hpp"
 #include "Animation.hpp"
+#include "Text.hpp"
 
 class Animation;
 
@@ -36,6 +37,7 @@ class ElementDeJeu{
         virtual void draw()=0;
         virtual void drawWithoutAnimate()=0;
         virtual int getMyId()=0;
+        virtual Fl_Color getcouleur()=0;
         virtual void mouseClick(Point mouseLoc)=0;
         virtual void mouseMove(Point mouseLoc)=0;
         virtual Point getPosPlatifcontain(Point coord)=0;
@@ -68,6 +70,7 @@ class Bonbon: public ElementDeJeu{
 
         void draw() override;
         int getMyId() override;
+        Fl_Color getcouleur()override;
         void drawWithoutAnimate() override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
@@ -92,6 +95,7 @@ class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
 
         void draw() override;
         int getMyId() override;
+        Fl_Color getcouleur()override;
         void drawWithoutAnimate() override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
@@ -117,6 +121,7 @@ class Mur: public ElementDeJeu{
         void draw() override;
         void drawWithoutAnimate() override{};
         int getMyId() override;
+        Fl_Color getcouleur()override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
@@ -143,6 +148,7 @@ class Glacage: public ElementDeJeu{
         void draw() override;
         void drawWithoutAnimate() override{};
         int getMyId() override;
+        Fl_Color getcouleur()override;
         void mouseClick(Point mouseLoc) override{};
         void mouseMove(Point mouseLoc) override{};
         Point getPosPlatifcontain(Point coord) override{return {-1,-1};};
@@ -244,6 +250,7 @@ class Ingredient: public ElementDeJeu{
     int getMyId() override{
         return 30;
     }
+    Fl_Color getcouleur()override{return FL_WHITE;};
     void mouseClick(Point mouseLoc) override;
     void mouseMove(Point mouseLoc) override;
     Point getPosPlatifcontain(Point coord) override;

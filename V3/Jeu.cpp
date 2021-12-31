@@ -153,13 +153,8 @@ void jeu::check_ingredient(){
 vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
-            if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]&&plat[i][j+1] == plat[i][j+2]){ // si a = b et a = c alors b = c
-                if (plat[i][j] != 0 && plat[i][j]!=20 and plat[i][j]!=21 && plat[i][j]!=30){ // MURs
-                    //if (j<taille_plateau-3){
-                        //if (plat[i][j+3] == plat[j][i]){
-                            //plat[i][j+3] = -20;  //devient un bonbon spécial -> (plat[i][j+3]*-1)-12;
-                        //}
-                    //}
+            if (plat[i][j] == plat[i][j+1] && plat[i][j] == plat[i][j+2]&&plat[i][j+1] == plat[i][j+2]){
+                if (plat[i][j] != 0 && plat[i][j]!=20 and plat[i][j]!=21 && plat[i][j]!=30){
                     plat[i][j] = -20;
                     plat[i][j+1] = -20;
                     plat[i][j+2] = -20;
@@ -174,11 +169,7 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (plat[j][i] == plat[j+1][i] && plat[j][i] == plat[j+2][i]){
-                if (plat[j][i]!=0 && plat[j][i]!=20 and plat[j][i]!=21 && plat[i][j]!=30){ //MURs
-                    //if (i<taille_plateau-3){
-                        //if (plat[j+3][i] == plat[j][i])
-                            //plat[j+3][i] = -20;   // devient un bonbon spécial -> plat[j+3][i] = (plat[j+3][i]*-1)-12;
-                    //}
+                if (plat[j][i]!=0 && plat[j][i]!=20 and plat[j][i]!=21 && plat[i][j]!=30){
                     plat[j][i] = -20;
                     plat[j+1][i] = -20;
                     plat[j+2][i] = -20;
@@ -204,8 +195,8 @@ void jeu::check_5bonbons(){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-4; j++){
             //horizontal
-            if (plateau[i][j] == plateau[i][j+1] && plateau[i][j] == plateau[i][j+2] && plateau[i][j] == plateau[i][j+3] && plateau[i][j] == plateau[i][j+4]){ // si a = b et a = c alors b = c
-                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){ // MURs
+            if (E[i][j].get()->getcouleur() == E[i][j+1].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+2].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+3].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+4].get()->getcouleur()){
+                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){
 
                     plateau[i][j] = -20;
                     plateau[i][j+1] = -20;
@@ -218,8 +209,8 @@ void jeu::check_5bonbons(){
                     plateau[i][j+4] = -20;
                 }
             }
-            if (plateau[j][i] == plateau[j+1][i] && plateau[j][i] == plateau[j+2][i] && plateau[j][i] == plateau[j+3][i] && plateau[j][i] == plateau[j+4][i]){ // si a = b et a = c alors b = c
-                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[j][i]!=-20){ // MURs
+            if (E[j][i].get()->getcouleur() == E[j+1][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+2][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+3][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+4][i].get()->getcouleur()){
+                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[j][i]!=-20){
 
                     plateau[j][i] = -20;
                     plateau[j+1][i] = -20;
