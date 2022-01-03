@@ -123,6 +123,8 @@ public:
     void check_5bonbons();
     void coup_cookie(int id, Point cookie_to_delete);
     void check_4bonbons();
+    void check_3bonbons();
+    void check_L();
 
     void echange(Point a, Point b);
     bool coup_possible(Point a, Point b);
@@ -132,6 +134,9 @@ public:
 
     vector<Point> setToExplose();
     void DoExplose(vector<Point> to_explose);
+    void ExploseLigne(int l);
+    void ExploseColonne(int c);
+    void ExploseBBspecialRond(Point empl);
     void DoExploseGlacage();
     void check_ingredient();
 

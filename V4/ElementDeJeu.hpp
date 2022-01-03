@@ -33,6 +33,10 @@ class ElementDeJeu{
           posPlat = newPosPlat;
         };
 
+        void setCouleur(Fl_Color newc){
+            couleur = newc;
+        }
+
 
         virtual void draw()=0;
         virtual void drawWithoutAnimate()=0;
