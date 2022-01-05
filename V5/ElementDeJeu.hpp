@@ -9,7 +9,7 @@ class Animation;
 
 /*--------------------------------------------------
 
-ElementDeJeu class.
+Classe abstraite ElementDeJeu
 
 --------------------------------------------------*/
 
@@ -22,21 +22,12 @@ class ElementDeJeu{
         Animation *animation;
 
         ElementDeJeu(Point posPlat, Fl_Color couleur);
-        Point getPoint(){
-            return {50*posPlat.y+48, 50*posPlat.x+70};
-        }
-        Point getposPlat(){
-          return posPlat;
-        }
 
-        void setPosPlat(Point newPosPlat){
-          posPlat = newPosPlat;
-        };
 
-        void setCouleur(Fl_Color newc){
-            couleur = newc;
-        }
-
+        Point getPoint();
+        Point getposPlat();
+        void setPosPlat(Point newPosPlat);
+        void setCouleur(Fl_Color newc);
 
         virtual void draw()=0;
         virtual void drawWithoutAnimate()=0;
@@ -49,8 +40,6 @@ class ElementDeJeu{
         virtual void ElementMove(int sens)=0;
         virtual bool animation_is_complete()=0;
         
-
-
         virtual ~ElementDeJeu(){}
 };
 
@@ -68,12 +57,10 @@ class Bonbon: public ElementDeJeu{
     public:
         Bonbon(Point posPlat, Fl_Color couleur, int w, int h);
 
-        Rectangle getR(){
-            return r;
-        }
+        Rectangle getR();
 
-        void draw() override;
         int getMyId() override;
+        void draw() override;
         Fl_Color getcouleur()override;
         void drawWithoutAnimate() override;
         void mouseClick(Point mouseLoc) override;
@@ -97,8 +84,8 @@ class BonbonSpecialRond: public ElementDeJeu{   // bonbon emballé Bombe
     public:
         BonbonSpecialRond(Point posPlat, Fl_Color couleur, int r);
 
-        void draw() override;
         int getMyId() override;
+        void draw() override;
         Fl_Color getcouleur()override;
         void drawWithoutAnimate() override;
         void mouseClick(Point mouseLoc) override;
@@ -122,9 +109,9 @@ class Mur: public ElementDeJeu{
     public:
         Mur(Point posPlat, int w, int h);
 
-        void draw() override;
-        void drawWithoutAnimate() override{};
         int getMyId() override;
+        void draw() override;
+        void drawWithoutAnimate() override;
         Fl_Color getcouleur()override;
         void mouseClick(Point mouseLoc) override;
         void mouseMove(Point mouseLoc) override;
@@ -145,13 +132,13 @@ Glacage class. Heritage ElementDeJeu
 class Glacage: public ElementDeJeu{
     private:
         Rectangle r;
-        int vie;
+        int vie;        // Glacage de Niv 1 ou Niv 2 
     public:
         Glacage(Point posPlat, int w, int h);
 
+        int getMyId() override;
         void draw() override;
         void drawWithoutAnimate() override{};
-        int getMyId() override;
         Fl_Color getcouleur()override;
         void mouseClick(Point mouseLoc) override{};
         void mouseMove(Point mouseLoc) override{};
@@ -248,12 +235,9 @@ class Ingredient: public ElementDeJeu{
     public:
     Ingredient(Point posPlat, string s, int w, int h):ElementDeJeu(posPlat, FL_WHITE), r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, s, 20}{}
 
+    int getMyId() override;
     void draw() override;
     void drawWithoutAnimate() override;
-
-    int getMyId() override{
-        return 30;
-    }
     Fl_Color getcouleur()override{return FL_WHITE;};
     void mouseClick(Point mouseLoc) override;
     void mouseMove(Point mouseLoc) override;

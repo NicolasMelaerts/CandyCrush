@@ -4,10 +4,7 @@
 
 /*--------------------------------------------------
 
-Text class.
-
-Use to display text on the screen. For example:
-Text("Hello!", {250, 250}).draw();
+Class Text reprise des TPs
 
 --------------------------------------------------*/
 
@@ -18,8 +15,7 @@ class Text {
   Fl_Color color;
  public:
   //Constructor
-  Text(string s, Point center, int fontSize = 10, Fl_Color color = FL_BLACK):
-    s{s}, center{center}, fontSize{fontSize}, color{color} {}
+  Text(string s, Point center, int fontSize = 10, Fl_Color color = FL_BLACK);
 
   //Draw
   void draw();
@@ -55,24 +51,11 @@ TextRectangle class.
 
 class TextRectangle: public Text, public Rectangle {
  public:
-  TextRectangle(Point center, int w, int h, string text, int fontSize = 10)
-      : Text{text, center, fontSize}, Rectangle{center, w, h} {}
-  void draw(){
-    Rectangle::draw();
-    Text::draw();
-  }
-  void setNiveau(){
-    int niv = stoi(Text::getString());
-    if (niv<5){
-      Text::setString(to_string(niv+1));
-    }
-    else {
-      Text::setString(to_string(1));
-    }
-  }
+  TextRectangle(Point center, int w, int h, string text, int fontSize = 10);
+
+  void draw();
+  void setNiveau();
 
 };
+
 #endif
-
-
-

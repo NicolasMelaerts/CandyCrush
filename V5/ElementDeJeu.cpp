@@ -1,6 +1,28 @@
 #include "ElementDeJeu.hpp"
 
+/*--------------------------------------------------
+
+Classe abstraite ElementDeJeu
+
+--------------------------------------------------*/
+
 ElementDeJeu::ElementDeJeu(Point posPlat, Fl_Color couleur):posPlat{posPlat}, couleur{couleur}, animation{nullptr}{}
+
+Point ElementDeJeu::getposPlat(){
+  return posPlat;
+}
+
+Point ElementDeJeu::getPoint(){
+  return {50*posPlat.y+48, 50*posPlat.x+70};
+}
+
+void ElementDeJeu::setPosPlat(Point newPosPlat){
+  posPlat = newPosPlat;
+}
+
+void ElementDeJeu::setCouleur(Fl_Color newc){
+  couleur = newc;
+}
 
 /*--------------------------------------------------
 
@@ -10,6 +32,10 @@ Bonbon class.
 
 
 Bonbon::Bonbon(Point posPlat, Fl_Color couleur, int w, int h):ElementDeJeu{posPlat, couleur}, r{{50*posPlat.y+48, 50*posPlat.x+70},w,h,couleur, couleur}{}
+
+Rectangle Bonbon::getR(){
+  return r;
+}
 
 int Bonbon::getMyId(){
   int c = r.getFillColor();
@@ -37,7 +63,7 @@ void Bonbon::draw(){
 }
 
 void Bonbon::drawWithoutAnimate(){
-    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});
+    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});// pos d'ElementDeJeu
     r.draw();
 }
 
@@ -49,6 +75,7 @@ void Bonbon::mouseClick(Point mouseLoc){
 
 void Bonbon::mouseMove(Point mouseLoc){
     if (r.contains(mouseLoc)){
+      // pour mieux visualisé les contour d'un bonbon sélectionné
       if (r.getFillColor() == 88 or r.getFillColor() == 216 or r.getFillColor() == 248){
         r.setFrameColor(FL_WHITE);
       } else{
@@ -56,7 +83,7 @@ void Bonbon::mouseMove(Point mouseLoc){
       }
     }
     else{
-      r.setFrameColor(r.getFillColor());
+      r.setFrameColor(r.getFillColor());  // non séléctionné même couleur pour contour et intérieur
     }
 }
 
@@ -68,12 +95,14 @@ Point Bonbon::getPosPlatifcontain(Point coord){
 }
 
 void Bonbon::DoExplosion(){
+  // le bonbon tourne sur lui même pendant un certain temps
   if (!animation){
     animation = new Animation(this, static_cast<Animation::AnimationType>(0), 0);
   }
 }
 
 void Bonbon::ElementMove(int sens){
+  // le bonbon effectue une translation dans le sens donné
   if (!animation){
     animation = new Animation(this, static_cast<Animation::AnimationType>(1), sens);
   }
@@ -118,7 +147,7 @@ void BonbonSpecialRond::draw(){
 }
 
 void BonbonSpecialRond::drawWithoutAnimate(){
-    c.setCenter({50*getposPlat().y+48, 50*getposPlat().x+70});
+    c.setCenter({50*getposPlat().y+48, 50*getposPlat().x+70}); // pos d'ElementDeJeu
     c.draw();
 }
 
@@ -130,6 +159,7 @@ void BonbonSpecialRond::mouseClick(Point mouseLoc){
 
 void BonbonSpecialRond::mouseMove(Point mouseLoc){
     if (c.contains(mouseLoc)){
+      // pour mieux visualisé les contour d'un bonbon sélectionné
       if (c.getFillColor() == 88 or c.getFillColor() == 216 or c.getFillColor() == 248 or c.getFillColor()==FL_BLACK){
         c.setFrameColor(FL_WHITE);
       } else{
@@ -137,11 +167,12 @@ void BonbonSpecialRond::mouseMove(Point mouseLoc){
       }
     }
     else{
-      c.setFrameColor(c.getFillColor());
+      c.setFrameColor(c.getFillColor()); // non séléctionné même couleur pour contour et intérieur
     }
 }
 
 void BonbonSpecialRond::ElementMove(int sens){
+  // le bonbon effectue une translation dans le sens donné
   if (!animation){
     animation = new Animation(this, static_cast<Animation::AnimationType>(1), sens);
   }
@@ -154,7 +185,9 @@ Point BonbonSpecialRond::getPosPlatifcontain(Point coord){
   return {-1, -1};
 }
 
-void BonbonSpecialRond::DoExplosion(){}
+void BonbonSpecialRond::DoExplosion(){
+  // ne fait rien 
+}
 
 bool BonbonSpecialRond::animation_is_complete(){
   return animation;
@@ -174,14 +207,16 @@ int Mur::getMyId(){
     return 0;
 };
 
-Fl_Color Mur::getcouleur(){
-  return r.getFillColor();
-}
-
 void Mur::draw(){
     r.draw();
 }
 
+void Mur::drawWithoutAnimate(){
+}
+
+Fl_Color Mur::getcouleur(){
+  return r.getFillColor();
+}
 
 void Mur::mouseClick(Point mousLoc){
 }
@@ -189,12 +224,12 @@ void Mur::mouseClick(Point mousLoc){
 void Mur::mouseMove(Point mouseLoc){
 }
 
-
 Point Mur::getPosPlatifcontain(Point coord){
   return {-1, -1};
 }
 
-void Mur::DoExplosion(){}
+void Mur::DoExplosion(){
+}
 
 bool Mur::animation_is_complete(){
   return EXIT_SUCCESS;
@@ -209,16 +244,16 @@ Glacage class. Heritage ElementDeJeu
 
 Glacage::Glacage(Point posPlat, int w, int h):ElementDeJeu{posPlat, FL_WHITE}, r{{50*posPlat.y+48, 50*posPlat.x+70}, w, h, FL_WHITE, FL_WHITE}, vie{2}{}
 
-void Glacage::draw(){
-    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});
-    r.draw();
-}
-
 int Glacage::getMyId(){
   if (getVie()==2)
     return 20;
   else
-    return 21;
+    return 21;    // Glacage de Niv 1
+}
+
+void Glacage::draw(){
+    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});
+    r.draw();
 }
 
 Fl_Color Glacage::getcouleur(){
@@ -227,6 +262,7 @@ Fl_Color Glacage::getcouleur(){
 
 void Glacage::DoExplosion(){
   if (getVie()==2){
+    // Niv 1 devient gris
     r.setFillColor(fl_rgb_color(96,96,96));
     r.setFrameColor(fl_rgb_color(96,96,96));
   }
@@ -238,6 +274,10 @@ void Glacage::DoExplosion(){
 Ingredient class. Heritage ElementDeJeu
 
 --------------------------------------------------*/
+
+int Ingredient::getMyId(){
+  return 30;
+}
 
 
 void Ingredient::draw(){
@@ -252,8 +292,8 @@ void Ingredient::draw(){
 }
 
 void Ingredient::drawWithoutAnimate(){
-    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70});
-    r.setCenter({50*getposPlat().y+48, 50*getposPlat().x+70});
+    r.setPoint({50*getposPlat().y+48, 50*getposPlat().x+70}); // rectangle
+    r.setCenter({50*getposPlat().y+48, 50*getposPlat().x+70}); // texte
     r.draw();
 }
 
@@ -264,12 +304,9 @@ void Ingredient::mouseClick(Point mouseLoc){
 }
 
 void Ingredient::mouseMove(Point mouseLoc){
+    // si souris sur ingrédient contour devient noir
     if (r.contains(mouseLoc)){
-      if (r.getFillColor() == 88 or r.getFillColor() == 216 or r.getFillColor() == 248){
-        r.setFrameColor(FL_WHITE);
-      } else{
         r.setFrameColor(FL_BLACK);
-      }
     }
     else{
       r.setFrameColor(r.getFillColor());
@@ -285,6 +322,7 @@ Point Ingredient::getPosPlatifcontain(Point coord){
 
 
 void Ingredient::ElementMove(int sens){
+  // l'ingrédient effectue une translation dans le sens donné
   if (!animation){
     animation = new Animation(this, static_cast<Animation::AnimationType>(1), sens);
   }

@@ -37,13 +37,14 @@ struct Rotation {
 
 /*--------------------------------------------------
 
-Animation class.
+Classe Animation. Pour les translation d'élément (6 translations possibles)
+et les explosions qui font tourner les éléments pendant un certain temps
 
 --------------------------------------------------*/
 
 class Animation{
 public:
-    enum AnimationType {explosion, Bonbon_move};
+    enum AnimationType {explosion, move};
 private:
     const int animationTime = 60;
     const int descente = 100;

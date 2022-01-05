@@ -20,10 +20,13 @@ struct Point{
     int x,y;
 };
 
+struct DoublePoint{
+    Point point1,point2;
+};
 
 /*--------------------------------------------------
 
-Rectangle class
+Classe Rectangle reprise des TPs
 
 --------------------------------------------------*/
 
@@ -84,7 +87,7 @@ class Rectangle {
 
 /*--------------------------------------------------
 
-Circle class
+Classe Circle reprise des TPs
 
 --------------------------------------------------*/
 

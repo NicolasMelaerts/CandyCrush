@@ -6,6 +6,12 @@
 
 using namespace std;
 
+/*--------------------------------------------------
+
+Classe ScoreAndNbcoups.
+
+--------------------------------------------------*/
+
 class ScoreAndNbcoups{
     private:
         int meilleur_score;
@@ -30,9 +36,7 @@ class ScoreAndNbcoups{
         void write_meilleur_score(int niv, int s);
         int get_meilleur_score(){return meilleur_score;}
 
-        void reset_nb_coup_joue(){
-            nb_coups_joue = 0;
-        }
+        void reset_nb_coup_joue();
 };
 
 #endif

@@ -21,7 +21,7 @@ using namespace std;
 
 /*--------------------------------------------------
 
-jeu class.
+Classe jeu
 
 --------------------------------------------------*/
 
@@ -45,28 +45,16 @@ private:
 
 public:
 
-    jeu(int niv):c{0,0}, niv{niv}{
-        setGame(niv);
-    };
+    jeu(int niv);
 
+    void setGame(int niveau);
 
-    void setGame(int niveau){
-        ouvertureNiv(niveau);
-        ouvertureInfo(niveau);
-        init_plateau(E);
-        c.set_score(0);
-        c.reset_nb_coup_joue();
-        niv = niveau;
-        cout << "Score = " << c.get_score() << endl;
-        cout << "MeilleurScore = " << c.get_meilleur_score() << endl;
-        cout << "Coups restant  = " << c.get_nb_coups_restants() << endl;
-    }
-
-    shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> PtrPlateau(){
+    // getteur et setteur
+    shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> getPtrPlateau(){
         return make_shared<vector< vector<shared_ptr<ElementDeJeu>> >>(E);
     }
 
-    shared_ptr<ScoreAndNbcoups> PtrScoreAndNb_coups(){
+    shared_ptr<ScoreAndNbcoups> getPtrScoreAndNb_coups(){
         return make_shared<ScoreAndNbcoups>(c);
     }
 
@@ -117,23 +105,23 @@ public:
     void init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E);
 
     void search_combinaison();
-    vector<vector<int> > check_lines(vector<vector<int> > plat);
-    vector<vector<int> > check_rows(vector<vector<int> > plat);
+    vector<vector<int> > check_3bonbons(vector<vector<int> > plat);
+
 
     void check_5bonbons();
     void coup_cookie(int id, Point cookie_to_delete);
     void check_4bonbons();
-    void check_3bonbons();
     void check_L();
 
     void echange(Point a, Point b);
-    bool coup_possible(Point a, Point b);
-    bool coup_possible();
+    bool coup_possible(Point a, Point b);   // swap autorisé
+    bool coup_possible();       // vérif si coup possible sur le plateau si non -> mélanger()
     void melanger();    // si pas la poss de faire une combi de 3 bonbons
 
 
     vector<Point> setToExplose();
     void DoExplose(vector<Point> to_explose);
+    void Explose(vector<Point> to_explose);
     void ExploseLigne(int l);
     void ExploseColonne(int c);
     void ExploseBBspecialRond(Point empl);

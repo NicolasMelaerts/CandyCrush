@@ -7,10 +7,11 @@ Canvas class.
 --------------------------------------------------*/
 
 void Canvas::draw(){
-    ptrPlateau=j.get()->PtrPlateau();
+    ptrPlateau=j.get()->getPtrPlateau();
+
     for (int i=0; i<9; i++){
         for (int j=0; j<9; j++){
-            ptrPlateau.get()->at(i).at(j).get()->draw();
+            ptrPlateau.get()->at(i).at(j).get()->draw();    // dessine tous les éléments du plateau
         }
     }
 }
@@ -23,7 +24,8 @@ AfficherScoreAndNb_coups class.
 --------------------------------------------------*/
 
 void AfficherScoreAndNb_coups::draw(){
-    ptrScoreAndNb_coups=j.get()->PtrScoreAndNb_coups();
+    ptrScoreAndNb_coups=j.get()->getPtrScoreAndNb_coups();
+
     Text(to_string(ptrScoreAndNb_coups.get()->get_score()), {390, 15}, 20, FL_BLACK).draw();
     Text(to_string(ptrScoreAndNb_coups.get()->get_nb_coups_restants()), {450, 40}, 20, FL_BLACK).draw();
     Text(to_string(ptrScoreAndNb_coups.get()->get_meilleur_score()), {200, 40}, 20, FL_BLACK).draw();
@@ -47,7 +49,7 @@ void Menu::draw(){
     Text("Appuie sur 'q' pour quitter", {250, 560}, 20).draw();
     
 
-    niv.draw();
+    rectangle_info_niv.draw();
 
     AffichagePendantPartie();
 }
@@ -70,7 +72,11 @@ void Menu::AffichagePendantPartie(){
 }
 
 void Menu::changeNiv(){
-    niv.setNiveau();
+    rectangle_info_niv.setNiveau();
+}
+
+int Menu::getniv(){
+    return stoi(rectangle_info_niv.getString());
 }
 
 

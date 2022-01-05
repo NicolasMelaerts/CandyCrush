@@ -1,15 +1,13 @@
-#include <FL/Fl.H>
-#include <FL/fl_draw.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Box.H>
-#include <string>
-#include <math.h>
-#include <time.h>
-#include <chrono>
-#include <vector>
-#include <iostream>
-#include <random>
-#include <unistd.h>
+/*
+
+Auteur  : Nicolas Melaerts
+Date    : Janvier 2021
+Cours   : Langages de programmation 2
+Section : Sciences Informatiques ULB
+
+But du programme : Jeu inspiré de Candy Crush Saga
+
+*/
 
 #include "Jeu.hpp"
 #include "Text.hpp"
@@ -18,42 +16,8 @@
 
 using namespace std;
 
-const int windowWidth=500;
-const int windowHeight=600;
-const double refreshPerSecond=60;
 
 
-
-/*-- EDIT THE FUNCTIONS HERE AND ADD YOUR OWN */
-
-// Init is called once a the beginning of the program
-// Do not draw anything in init
-void init(){
-}
-
-
-// Draw is called 60 times a second.
-// You should draw what the use should see here
-// Every time it starts with a blank screen
-void draw(){
-}
-
-
-// mouseMove is called every time the mouse moves
-// It is called with the current mouse position
-void mouseMove(int x, int y){
-}
-
-// keyPressed is called when a key is pressed
-// A key code is passed indicating which key
-// This is the ASCII value for normal keys
-// For special keys like arrow, find the key codes:
-// https://www.fltk.org/doc-1.3/enumerations.html
-void keyPressed(int keyCode){
-    if (keyCode=='q') exit(0);
-}
-
-/* ------ DO NOT EDIT BELOW HERE (FOR NOW) ------ */
 class MainWindow : public Fl_Window {
     EcranAccueil e{};
     int time=0;
@@ -67,8 +31,8 @@ class MainWindow : public Fl_Window {
     ControlJeu controljeu{j};
 
     public:
-    MainWindow() : Fl_Window(000, 000, windowWidth, windowHeight, "Candy Crush") {
-        Fl::add_timeout(1.0/refreshPerSecond, Timer_CB, this);
+    MainWindow() : Fl_Window(000, 000, 500, 600, "Candy Crush") {
+        Fl::add_timeout(1.0/60, Timer_CB, this);
         resizable(this);
     }
     void draw() override {
@@ -81,7 +45,6 @@ class MainWindow : public Fl_Window {
         canvas.draw();
         m.draw();
         sAndc.draw();
-        ::draw();    
         }    
     }
     int handle(int event) override {
@@ -94,14 +57,15 @@ class MainWindow : public Fl_Window {
                 return 1;
             case FL_KEYDOWN:
                 if (Fl::event_key() == 'r'){
-                    cout << "r" << endl;
                     controljeu.reset_meilleur_score();
                 }
-                keyPressed(Fl::event_key());
+                
                 if (Fl::event_key() == ' ' and !controljeu.get_jeu_en_cours()){
                     m.changeNiv();
                     controljeu.changeNiv(m.getniv());
                 }
+                if (Fl::event_key()=='q'){exit(0);}
+
             case FL_DRAG:
                 controljeu.drag(Point{Fl::event_x(),Fl::event_y()});
             case FL_PUSH:
@@ -112,13 +76,11 @@ class MainWindow : public Fl_Window {
     static void Timer_CB(void *userdata) {
         MainWindow *o = (MainWindow*) userdata;
         o->redraw();
-        Fl::repeat_timeout(1.0/refreshPerSecond, Timer_CB, userdata);
+        Fl::repeat_timeout(1.0/60, Timer_CB, userdata);
     }
 };
 
 int main(int argc, char *argv[]) {
-    //srand(time(0));
-    init();
     MainWindow window;
     window.show(argc, argv);
     return Fl::run();

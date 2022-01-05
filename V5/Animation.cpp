@@ -16,23 +16,23 @@ void Animation::draw() {
 }
 
 Point Animation::MoveElementDeJeu() {
-  if (animationType==Bonbon_move){
-    if (sens==0){ 
+  if (animationType==move){
+    if (sens==0){     // vers le bas
       return {0, static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
     }
-    else if (sens==1){  
+    else if (sens==1){    // vers le haut
       return {0, static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6))};
     }
-    else if (sens==2){  
+    else if (sens==2){    // vers la droite
       return {static_cast<int>(1*descente*sin(3.1415*time/animationTime/6)), 0};
     }
-    else if (sens==3){  
+    else if (sens==3){    // vers la gauche
       return {static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6)), 0};
     }
-    else if (sens==4){  
+    else if (sens==4){    // en diagonale vers le bas a gauche 
       return {static_cast<int>(-1*descente*sin(3.1415*time/animationTime/6)), static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
     }
-    else if (sens==5){
+    else if (sens==5){    // en diagonale vers le bas a droite
       return {static_cast<int>(1*descente*sin(3.1415*time/animationTime/6)), static_cast<int>(1*descente*sin(3.1415*time/animationTime/6))};
     }
     

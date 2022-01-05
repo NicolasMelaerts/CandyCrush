@@ -2,9 +2,24 @@
 
 /*--------------------------------------------------
 
-jeu class
+Classe jeu
 
 --------------------------------------------------*/
+
+jeu::jeu(int niv):c{0,0}, niv{niv}{
+    setGame(niv);
+}
+
+
+void jeu::setGame(int niveau){
+    ouvertureNiv(niveau);
+    ouvertureInfo(niveau);
+    init_plateau(E);
+    c.set_score(0);
+    c.reset_nb_coup_joue();
+    niv = niveau;
+}
+
 
 void jeu::ouvertureNiv(int niv){
     E.clear();
@@ -52,7 +67,7 @@ void jeu::ouvertureNiv(int niv){
                 Ingredient ingr{{i, j}, "N", 20, 20};
                 E[i].push_back(make_shared<Ingredient>(ingr));
             }
-            if (ajout==20){
+            if (ajout==20){ // Niv 2
                 Glacage g{{i,j}, 45, 45};
                 E[i].push_back(make_shared<Glacage>(g));
             }
@@ -66,11 +81,11 @@ void jeu::ouvertureNiv(int niv){
     }
 }
 
+
 void jeu::ouvertureInfo(int niv){
 
     ifstream Info("NiveauDeJeu/Info"+to_string(niv));
     
-
     if(Info){
         string inf;
         int i = 0;
@@ -89,44 +104,30 @@ void jeu::ouvertureInfo(int niv){
 }
 
 
-vector<Point> jeu::setToExplose(){
-    vector <Point> to_explose;
-    for (int i = 0; i<9;i++){
-        for (int k = 0; k<9;k++){
-            if (getelemplateau(i,k)==-20){
-                to_explose.push_back({i,k});
-                c.augmente_score(niv, 100);
-            }   
-        }
-    }
-    return to_explose;
-}
-
+// Bonbon spécial horizontal
 void jeu::ExploseLigne(int l){
-    cout << "Explose Ligne" << endl;
+
     vector <Point> to_explose;
 
     for (int i = 0; i<9;i++){
+        // si bonbon ou bonobons spécial
         if (E[l][i].get()->getMyId()<0 or (E[l][i].get()->getMyId()>0 and E[l][i].get()->getMyId()<7)){
             to_explose.push_back({l,i});
             c.augmente_score(niv, 100);
             plateau[l][i] = -20;
         }
     }
-    for (auto &b: to_explose)
-        E[b.x][b.y].get()->DoExplosion();
-    wait_anim();
-    for (auto &b: to_explose){
-        E[b.x][b.y].get()->setPosPlat({1000,1000});
-        E[b.x][b.y].get()->setCouleur(FL_BLACK);
-    }
+    Explose(to_explose);
 }
 
+
+// Bonbon spécial vertical
 void jeu::ExploseColonne(int col){
-    cout << "Explose Colonne" << endl;
+
     vector <Point> to_explose;
 
     for (int i = 0; i<9;i++){
+        // si bonbon ou bonobons spécial
         if (E[i][col].get()->getMyId()<0 or (E[i][col].get()->getMyId()>0 and E[i][col].get()->getMyId()<7)){
             to_explose.push_back({i,col});
             c.augmente_score(niv, 100);
@@ -134,18 +135,16 @@ void jeu::ExploseColonne(int col){
         }
 
     }
-    for (auto &b: to_explose)
-        E[b.x][b.y].get()->DoExplosion();
-    wait_anim();
-    for (auto &b: to_explose){
-        E[b.x][b.y].get()->setPosPlat({1000,1000});
-        E[b.x][b.y].get()->setCouleur(FL_BLACK);
-    }
+    Explose(to_explose);
 }
+
+
+// Bonbon emballé (bombe)
 void jeu::ExploseBBspecialRond(Point empl){
-    cout << "Explose BB special rond" << endl;
+
     vector <Point> to_explose;
 
+    // cas spéciaux sur les bords
     if (empl.x == 0){
         if (empl.y == 0){
             to_explose.push_back({empl.x+1, empl.y});
@@ -202,6 +201,7 @@ void jeu::ExploseBBspecialRond(Point empl){
         to_explose.push_back({empl.x+1, empl.y});
     }
 
+    // cas normal pas sur les bords
     else{
         to_explose.push_back({empl.x-1, empl.y-1});
         to_explose.push_back({empl.x-1, empl.y});
@@ -226,7 +226,44 @@ void jeu::ExploseBBspecialRond(Point empl){
     }
 };
 
+
+vector<Point> jeu::setToExplose(){
+
+    vector <Point> to_explose;
+
+    for (int i = 0; i<9;i++){
+        for (int k = 0; k<9;k++){
+            if (getelemplateau(i,k)==-20){
+                to_explose.push_back({i,k});
+                c.augmente_score(niv, 100);
+            }   
+        }
+    }
+    return to_explose;
+}
+
+
 void jeu::DoExplose(vector<Point> to_explose){
+    Explose(to_explose);
+
+    for (auto &b: to_explose){
+        // Bonbon spécial horizontal
+        if (E[b.x][b.y].get()->getMyId()<0 and E[b.x][b.y].get()->getMyId()>-7){
+            ExploseLigne(b.x);
+        }
+        // Bonbon spécial vertical
+        if (E[b.x][b.y].get()->getMyId()<-6 and E[b.x][b.y].get()->getMyId()>-13){
+            ExploseColonne(b.y);
+        }
+        // Bonbon emballé (bombe)
+        if (E[b.x][b.y].get()->getMyId()<-12 and E[b.x][b.y].get()->getMyId()>-19){
+            ExploseBBspecialRond(b);
+        }
+    }
+}
+
+
+void jeu::Explose(vector<Point> to_explose){
     for (auto &b: to_explose)
         E[b.x][b.y].get()->DoExplosion();
     wait_anim();
@@ -234,32 +271,24 @@ void jeu::DoExplose(vector<Point> to_explose){
         E[b.x][b.y].get()->setPosPlat({1000,1000});
         E[b.x][b.y].get()->setCouleur(FL_BLACK);
     }
-    for (auto &b: to_explose){
-        if (E[b.x][b.y].get()->getMyId()<0 and E[b.x][b.y].get()->getMyId()>-7){
-            ExploseLigne(b.x);
-        }
-        if (E[b.x][b.y].get()->getMyId()<-6 and E[b.x][b.y].get()->getMyId()>-13){
-            ExploseColonne(b.y);
-        }
-        if (E[b.x][b.y].get()->getMyId()<-12 and E[b.x][b.y].get()->getMyId()>-19){
-            ExploseBBspecialRond(b);
-        }
-    }
 }
+
 
 void jeu::DoExploseGlacage(){
     for (int i=0; i<get_taille_plateau(); i++){
         for (int k=0; k<get_taille_plateau(); k++){
-            if (plateau[i][k] == 20){
+            if (plateau[i][k] == 20){   // glacage
+                // si un bonbon adjacent a explosé
                 if (plateau[i+1][k] == -20 or plateau[i-1][k] == -20 or plateau[i][k+1] == -20 or plateau[i][k-1] == -20){
-                    cout << i << ", " << k<< endl;
                     if (E[i][k].get()->getMyId() == 20){
-                        E[i][k].get()->DoExplosion();
+                        E[i][k].get()->DoExplosion();   // glacage niv 2 devient glacage de niv 1
                         c.augmente_score(niv, 150);
                     }
                     else{
+                        // glacage de niv 1 disparait
                         plateau[i][k] = -20;
                         E[i][k].get()->setPosPlat({1000,1000});
+                        E[i][k].get()->setCouleur(FL_BLACK);
                         c.augmente_score(niv, 250);
                     }
                     
@@ -270,11 +299,12 @@ void jeu::DoExploseGlacage(){
     }
 }
 
+
 void jeu::check_ingredient(){
     for (int i=0; i<get_taille_plateau(); i++){
         for (int k=0; k<get_taille_plateau(); k++){
-            if (plateau[i][k]==30){
-                if (i==8){
+            if (plateau[i][k]==30){     // ingrédient
+                if (i==8){  // tout en bas du plateau
                     plateau[i][k] = -20;
                     E[i][k].get()->setPosPlat({1000,1000});
                     c.augmente_score(niv, 300);
@@ -285,10 +315,7 @@ void jeu::check_ingredient(){
 }
 
 
-
-vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
-    cout << "check lines" << endl;
-    afficher_plateau_de_jeu();
+vector<vector<int> > jeu::check_3bonbons(vector<vector<int> > plat){
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-2; j++){
             if (E[i][j].get()->getcouleur() == E[i][j+1].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+2].get()->getcouleur()){
@@ -300,16 +327,6 @@ vector<vector<int> > jeu::check_lines(vector<vector<int> > plat){
                     }
                 }
             }
-        }
-    }
-    return plat;
-}
-
-vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
-    cout << "check rows" << endl;
-    afficher_plateau_de_jeu();
-    for (int i=0; i<taille_plateau; i++){
-        for (int j=0; j<taille_plateau-2; j++){
             if (E[j][i].get()->getcouleur() == E[j+1][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+2][i].get()->getcouleur()){
                 if (E[j][i].get()->getcouleur()!=FL_BLACK){
                     if (plat[j][i]!=0 && plat[j][i]!=20 and plat[j][i]!=21 && plat[i][j]!=30 && plat[j][i]!=-20 && plat[j+1][i]!=-20 && plat[j+2][i]!=-20){
@@ -319,12 +336,15 @@ vector<vector<int> > jeu::check_rows(vector<vector<int> > plat){
                     }
                 }
             }
+            
         }
     }
     return plat;
 }
 
+
 void jeu::coup_cookie(int id, Point cookie_to_delete){
+    // supprime tout les bonbons de la même couleur du bonbon qui a swap avec le cookie
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
             if (plateau[i][j]==id){
@@ -332,18 +352,18 @@ void jeu::coup_cookie(int id, Point cookie_to_delete){
             }
         }
     }
+    // supprime le cookie aussi
     plateau[cookie_to_delete.x][cookie_to_delete.y] = -20;
-    cout << "cookie coup" << endl;
-    afficher_plateau_de_jeu();
 }
 
+
 void jeu::check_5bonbons(){
-    afficher_plateau_de_jeu();
+    // suite de 5 bonbons à l'horizontale ou à la verticale, devient bonbon spécial rond cookie = cookie
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-4; j++){
             //horizontal
             if (E[i][j].get()->getcouleur() == E[i][j+1].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+2].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+3].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+4].get()->getcouleur()){
-                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){
+                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){ // != Mur, Glacage, Ingrédient ou vide 
 
                     plateau[i][j] = -20;
                     plateau[i][j+1] = -20;
@@ -356,8 +376,9 @@ void jeu::check_5bonbons(){
                     plateau[i][j+4] = -20;
                 }
             }
+            //vertical
             if (E[j][i].get()->getcouleur() == E[j+1][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+2][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+3][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+4][i].get()->getcouleur()){
-                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[j][i]!=-20){
+                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[j][i]!=-20){  // != Mur, Glacage, Ingrédient, vide
 
                     plateau[j][i] = -20;
                     plateau[j+1][i] = -20;
@@ -372,16 +393,16 @@ void jeu::check_5bonbons(){
             }
         }
     }
-    afficher_plateau_de_jeu();
 }
 
+
 void jeu::check_4bonbons(){
-    cout << "check 4" << endl;
+    // suite de 4 bonbons à l'horizontale ou à la verticale, devient bonbon spécial horizontal/vertical
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-3; j++){
             //horizontal
             if (E[i][j].get()->getcouleur() == E[i][j+1].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+2].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+3].get()->getcouleur()){
-                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20){ // MURs
+                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20 and E[i][j].get()->getcouleur()!= FL_BLACK){ // != Mur, Glacage, Ingrédient, vide
 
                     plateau[i][j] = -20;
                     plateau[i][j+1] = -20;
@@ -394,8 +415,9 @@ void jeu::check_4bonbons(){
                     plateau[i][j+3] = -20;
                 }
             }
+            //vertical
             if (E[j][i].get()->getcouleur() == E[j+1][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+2][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+3][i].get()->getcouleur()){
-                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[i][j]!=-20){ // MURs
+                if (plateau[j][i] != 0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[j][i]!=30 and plateau[j][i]!=-20 and E[j][i].get()->getcouleur()!= FL_BLACK){ // != Mur, Glacage, Ingrédient, vide
 
                     plateau[j][i] = -20;
                     plateau[j+1][i] = -20;
@@ -411,33 +433,15 @@ void jeu::check_4bonbons(){
     }
 }
 
-void jeu::check_3bonbons(){
-    for (int i=0; i<taille_plateau; i++){
-        for (int j=0; j<taille_plateau-2; j++){
-            if (E[i][j].get()->getcouleur() == E[i][j+1].get()->getcouleur() && E[i][j].get()->getcouleur() == E[i][j+2].get()->getcouleur()){
-                if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30){
-                    plateau[i][j] = -20;
-                    plateau[i][j+1] = -20;
-                    plateau[i][j+2] = -20;
-                }
-            }
-            if (E[j][i].get()->getcouleur() == E[j+1][i].get()->getcouleur() && E[j][i].get()->getcouleur() == E[j+2][i].get()->getcouleur()){
-                if (plateau[j][i]!=0 && plateau[j][i]!=20 and plateau[j][i]!=21 && plateau[i][j]!=30){
-                    plateau[j][i] = -20;
-                    plateau[j+1][i] = -20;
-                    plateau[j+2][i] = -20;
-                }
-            }
-        }
-    }
-}
 
 void jeu::check_L(){
-    cout << "check L" << endl;
-    afficher_plateau_de_jeu();
+// 4 types de L, devient bonbon spécial rond = bonbon emballé
+//      -          -  -  -           -     -  -  -
+//      -                -           -     -
+//      -  -  -          _     -  -  -     -
     for (int i=0; i<taille_plateau-2; i++){
         for (int j=0; j<taille_plateau-2; j++){
-            if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20 and E[i][j].get()->getcouleur()!= FL_BLACK){
+            if (plateau[i][j] != 0 && plateau[i][j]!=20 and plateau[i][j]!=21 && plateau[i][j]!=30 and plateau[i][j]!=-20 and E[i][j].get()->getcouleur()!= FL_BLACK){  // != Mur, Glacage, Ingrédient, vide
                 if(E[i][j].get()->getcouleur() == E[i+1][j].get()->getcouleur() && E[i][j].get()->getcouleur()== E[i+2][j].get()->getcouleur() && 
                    E[i][j].get()->getcouleur()==E[i+2][j+1].get()->getcouleur() && E[i][j].get()->getcouleur()==E[i+2][j+2].get()->getcouleur()){
                     plateau[i][j] = ((E[i][j].get()->getMyId())*-1)-12;
@@ -460,12 +464,9 @@ void jeu::check_L(){
                     plateau[i+2][j] = -20;
                     plateau[i][j+1] = -20;
                     plateau[i][j+2] = -20;
-                    cout << "2.5" << endl;
-                    afficher_plateau_de_jeu();
                 }
                 if(E[i+2][j].get()->getcouleur() == E[i+2][j+1].get()->getcouleur() && E[i+2][j].get()->getcouleur()== E[i+2][j+2].get()->getcouleur() && 
                    E[i+2][j].get()->getcouleur()==E[i+1][j+2].get()->getcouleur() && E[i+2][j].get()->getcouleur()==E[i][j+2].get()->getcouleur() and E[i+2][j].get()->getcouleur()!= FL_BLACK ){
-                       cout << "3" << endl;
                     plateau[i+2][j] = ((E[i+2][j].get()->getMyId())*-1)-12;
                     BonbonSpecialRond bsr{{i+2,j}, E[i+2][j].get()->getcouleur(), 20};
                     E[i+2][j] = make_shared<BonbonSpecialRond>(bsr);
@@ -476,7 +477,6 @@ void jeu::check_L(){
                 }
                 if(E[i][j].get()->getcouleur() == E[i][j+1].get()->getcouleur() && E[i][j].get()->getcouleur()== E[i][j+2].get()->getcouleur() && 
                    E[i][j].get()->getcouleur()==E[i+1][j+2].get()->getcouleur() && E[i][j].get()->getcouleur()==E[i+2][j+2].get()->getcouleur()){
-                       cout << "4 = "<< i << j << endl;
                     plateau[i][j] = ((E[i][j].get()->getMyId())*-1)-12;
                     BonbonSpecialRond bsr{{i,j}, E[i][j].get()->getcouleur(), 20};
                     E[i][j] = make_shared<BonbonSpecialRond>(bsr);
@@ -492,7 +492,9 @@ void jeu::check_L(){
     afficher_plateau_de_jeu();
 }
 
+
 void jeu::init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E){
+    // plareau d'entier a partir de l'ID des elements de jeu
     plateau.clear();
     for (int i =0; i<taille_plateau; i++){
         plateau.push_back({});
@@ -504,54 +506,53 @@ void jeu::init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E){
 
 
 void jeu::search_combinaison(){
-    
+    cout << "SEARCH_COMBI" << endl;
+    // vérif toutes les combinaisons possibles
     check_5bonbons();
     check_4bonbons();
     check_L();
+    set_plateau(check_3bonbons(get_plateau()));
 
-    set_plateau(check_rows(get_plateau()));
-    set_plateau(check_lines(get_plateau()));
-
-    afficher_plateau_de_jeu();
-
+    // les glacage explose seulement quand c'est un coup provoqué par le joueur
     DoExploseGlacage();  
 
-    while (get_finish_fall()){
-        cout << "MAJ_CANVAS" << endl;
+    while (get_finish_fall()){      // encore des espace vide (-20) dans le plateau 
 
-        DoExplose(setToExplose());
+        DoExplose(setToExplose());  // faire exploser et disparaitre les bonbons qui on eu une combinaisons
 
-        vector<vector<int >> ancien_plateau;
-
-        fall_mur_diagonale();
+        fall_mur_diagonale();   // espace vide en dessous d'un mur ou un glacage
         
+        // pour faire tomber les bonbons dans les espaces vides
+        vector<vector<int >> ancien_plateau;
         while (ancien_plateau != get_plateau()){
             ancien_plateau = get_plateau();
             fall();
         }
-        check_ingredient();
 
+        check_ingredient();     // ingredient en bas du plateau 
+
+        // vérif toutes les combinaisons possibles après fall
         check_5bonbons();
         check_4bonbons();
         check_L();
-        
-        set_plateau(check_rows(get_plateau()));
-        set_plateau(check_lines(get_plateau()));
+        set_plateau(check_3bonbons(get_plateau()));
 
+        // cas ou le joueur ne peut pas faire de coups car aucune combinaison n'est possible
         while (!coup_possible()){  
-            cout << "Auncun coup possible on melange" << endl;
             set_aucun_coup_poss(1);
             melanger();
         }
     }
-    c.do_coup();
+    c.do_coup();    // total de coups restant - 1
     
 }
+
 
 void jeu::fall(){
      
     vector <Point> to_fall;
 
+    // vérifie si le bonbon peut tomber d'un cran
     for (int i=0; i<get_taille_plateau(); i++){
         for (int k=0; k<get_taille_plateau()-1; k++){
             if (plateau[k+1][i]==-20 and plateau[k][i]!=-20 and E[k][i].get()->getMyId()!=0 and E[k][i].get()->getMyId()!=20 and E[k][i].get()->getMyId()!=21){
@@ -560,6 +561,7 @@ void jeu::fall(){
         }
     }
 
+    // animation des bonbon qui tombe et changement de leur position
     for (auto &f: to_fall){
         E[f.x][f.y].get()->ElementMove(0);
         wait_anim();
@@ -568,7 +570,7 @@ void jeu::fall(){
     }
 
 
-    // ajout new bb
+    // ajout nouveau bonbon aléatoirement si espace libre en haut du plateau
     for (int i=0; i<get_taille_plateau();i++){
         if (plateau[0][i] == -20){
             plateau[0][i] = rand()%nb_couleurs_bonbon+1;
@@ -579,29 +581,34 @@ void jeu::fall(){
 
 }
 
+
 bool jeu::get_finish_fall(){
+    // vérifie si des emplacement son encore vide pour continuer aa faire tomber des bonbons
     for (int i=0; i<get_taille_plateau(); i++){
         for (int k=0; k<get_taille_plateau(); k++){
-            if (plateau[k][i]==-20)
+            if (plateau[k][i]==-20)     // emplacement vide
                 return 1;
         }
     }
     return 0;
 }
 
+
 void jeu::fall_mur_diagonale(){
     bool stop = false;
     for (int i=0; i<get_taille_plateau(); i++){
         for (int k=0; k<get_taille_plateau(); k++){
-            if (k>0){
-                if ((plateau[k][i]==-20 and plateau[k-1][i]==0) or (plateau[k][i]==-20 and plateau[k-1][i]==20) or (plateau[k][i]==-20 and plateau[k-1][i]==21)){
-                    cout << "Attention = " << k-1 << ", " << i << endl;
+            if (k>0){  // mur ou glacage pas tout en bas du plateau
+
+                if ((plateau[k][i]==-20 and plateau[k-1][i]==0) or (plateau[k][i]==-20 and plateau[k-1][i]==20) or (plateau[k][i]==-20 and plateau[k-1][i]==21)){ // mur, glacage niv 1 et 2
+                    // va voir en haut a droite
                     if (i<8 and E[k-1][i+1].get()->getMyId()!=0 and plateau[k-1][i+1]!=-20){
                         E[k-1][i+1].get()->ElementMove(4);
                         wait_anim();
                         E[k-1][i+1].get()->setPosPlat({k, i});
                         echange({k-1, i+1}, {k,i});
                     }
+                    // va voir en haut a gauche
                     else{
                         if (E[k-1][i-1].get()->getMyId()!=0 and plateau[k-1][i+1]!=-20){
                             E[k-1][i-1].get()->ElementMove(5);
@@ -617,13 +624,12 @@ void jeu::fall_mur_diagonale(){
 }
 
 
-
+// affuicher le plateau avec les entier ou le plateau des éléments de jeu 
+// utile pour débugger
 void jeu::afficher_plateau_de_jeu(){
     cout << "Plateau :" << endl;
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
-            //if (E[i][j].get()->getEnlever() == 0){cout <<  "BONB ,";}
-            //else {cout << "RIEN ,";}
 
             if (plateau[i][j] == 1){cout <<  "BR  ,";}
             if (plateau[i][j] == 2){cout <<  "BB  ,";}
@@ -659,42 +665,6 @@ void jeu::afficher_plateau_de_jeu(){
             if (plateau[i][j] == 20){cout << "GLA ,";}
             if (plateau[i][j]==30){cout << "ING ,";}
             if (plateau[i][j]==-19){cout << "COO ,";}
-
-            if (E[i][j].get()->getMyId() == 1){cout <<  "BR  ,";}
-            if (E[i][j].get()->getMyId() == 2){cout <<  "BB  ,";}
-            if (E[i][j].get()->getMyId() == 3){cout <<  "BJ  ,";}
-            if (E[i][j].get()->getMyId() == 4){cout <<  "BV  ,";}
-            if (E[i][j].get()->getMyId() == 5){cout <<  "BM  ,";}
-            if (E[i][j].get()->getMyId() == 6){cout <<  "BO  ,";}
-
-            if (E[i][j].get()->getMyId() == -1){cout <<  "BHR ,";}
-            if (E[i][j].get()->getMyId() == -2){cout <<  "BHB ,";}
-            if (E[i][j].get()->getMyId() == -3){cout <<  "BHJ ,";}
-            if (E[i][j].get()->getMyId() == -4){cout <<  "BHV ,";}
-            if (E[i][j].get()->getMyId() == -5){cout <<  "BHM ,";}
-            if (E[i][j].get()->getMyId() == -6){cout <<  "BOH ,";}
-
-            if (E[i][j].get()->getMyId() == -7){cout <<  "BVR ,";}
-            if (E[i][j].get()->getMyId() == -8){cout <<  "BVB ,";}
-            if (E[i][j].get()->getMyId() == -9){cout <<  "BVJ ,";}
-            if (E[i][j].get()->getMyId() == -10){cout <<  "BVV ,";}
-            if (E[i][j].get()->getMyId() == -11){cout <<  "BVM ,";}
-            if (E[i][j].get()->getMyId() == -12){cout <<  "BVO ,";}
-
-            if (E[i][j].get()->getMyId() == -13){cout <<  "BSR ,";}
-            if (E[i][j].get()->getMyId() == -14){cout <<  "BSB ,";}
-            if (E[i][j].get()->getMyId() == -15){cout <<  "BSJ ,";}
-            if (E[i][j].get()->getMyId() == -16){cout <<  "BSV ,";}
-            if (E[i][j].get()->getMyId() == -17){cout <<  "BSM ,";}
-            if (E[i][j].get()->getMyId() == -18){cout <<  "BSO ,";}
-
-
-            if (E[i][j].get()->getMyId() == -20){cout << "RDT ,";}
-            if (E[i][j].get()->getMyId() == 0){cout << "MUR ,";}
-            if (E[i][j].get()->getMyId() == 20){cout << "GLA ,";}
-            if (E[i][j].get()->getMyId() == 21){cout << "GLA ,";}
-            if (E[i][j].get()->getMyId()==30){cout << "ING ,";}
-            if (E[i][j].get()->getMyId()==-19){cout << "COO ,";}
         }
         cout << endl;
     }
@@ -704,8 +674,6 @@ void jeu::afficher_plateau_de_jeu(){
     cout << "E :" << endl;
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau; j++){
-            //if (E[i][j].get()->getEnlever() == 0){cout <<  "BONB ,";}
-            //else {cout << "RIEN ,";}
 
             if (E[i][j].get()->getMyId() == 1){cout <<  "BR  ,";}
             if (E[i][j].get()->getMyId() == 2){cout <<  "BB  ,";}
@@ -748,20 +716,23 @@ void jeu::afficher_plateau_de_jeu(){
     cout << endl;
 }
 
+
 void jeu::echange(Point a, Point b){
+    // échange de deux élément de jeu sur le plateau et sur E
     swap(plateau[a.x][a.y], plateau[b.x][b.y]);
     swap(E[a.x][a.y], E[b.x][b.y]);
 }
 
+
 bool jeu::coup_possible(Point a, Point b){
+    // vérifie si un coup est possible sur un plateau de test pour ne pas modifié le plateau original
     vector<vector<int >> test_plateau = get_plateau();
     swap(test_plateau[a.x][a.y], test_plateau[b.x][b.y]);
     swap(E[a.x][a.y], E[b.x][b.y]);
-    test_plateau = check_lines(test_plateau);
-    test_plateau = check_rows(test_plateau);
+    test_plateau = check_3bonbons(test_plateau);
     for (auto &l: test_plateau){
         for (auto &i: l){
-            if (i==-20){
+            if (i==-20){  // une combinaison a été trouvée -> coup possible
                 swap(E[a.x][a.y], E[b.x][b.y]);
                 return true;
             }
@@ -771,6 +742,7 @@ bool jeu::coup_possible(Point a, Point b){
     return false;
 }
 
+// attendre que les animations de tout les éléments de jeu de E soient terminées
 void jeu::wait_anim(){
     bool anim_en_cours=true;
     while (anim_en_cours){
@@ -785,21 +757,23 @@ void jeu::wait_anim(){
         }
 }
 
-bool jeu::coup_possible(){
 
+bool jeu::coup_possible(){
+    // vérifie si un coups est possible sur le plateau de jeu
     //ligne 
     for (int i=0; i<taille_plateau-1; i++){
         for (int j=0; j<taille_plateau; j++){
+            // on ne peut pas swap les murs et les glacages 
             if (E[i][j].get()->getMyId() != 0 and E[i][j].get()->getMyId() != 20 and E[i][j].get()->getMyId() != 21
             and E[i+1][j].get()->getMyId() != 0 and E[i+1][j].get()->getMyId() != 20 and E[i+1][j].get()->getMyId() != 21)
                 if (coup_possible({i,j},{i+1, j}))
                     return true;
         }
     }
-
     //colonne
     for (int i=0; i<taille_plateau; i++){
         for (int j=0; j<taille_plateau-1; j++){
+            // on ne peut pas swap les murs et les glacages 
             if (E[i][j].get()->getMyId() != 0 and E[i][j].get()->getMyId() != 20 and E[i][j].get()->getMyId() != 21
             and E[i][j+1].get()->getMyId() != 0 and E[i][j+1].get()->getMyId() != 20 and E[i][j+1].get()->getMyId() != 21)
                 if (coup_possible({i,j},{i, j+1}))
@@ -810,7 +784,9 @@ bool jeu::coup_possible(){
     return false;
 }
 
+
 void jeu::melanger(){
+    // pas de coups possible, on remplace tout les bonbons normaux pas d'autres bonbons normaux aléatoirement
     for (int i =0; i<taille_plateau; i++){
         for (int j =0; j<taille_plateau; j++){
             if (E[i][j].get()->getMyId()>0 and E[i][j].get()->getMyId()<7){
@@ -819,6 +795,6 @@ void jeu::melanger(){
             }
         }
     }
-    init_plateau(E);
-    search_combinaison();
+    init_plateau(E);    // mise a jour du plateau d'entiers
+    search_combinaison();   // il peut y avoir des combinaisons dues a la génération aléatoire
 }

@@ -6,7 +6,7 @@
 
 /*--------------------------------------------------
 
-Canvas class.
+Classe Canvas. Affiche le plateau de jeu
 
 --------------------------------------------------*/
 
@@ -15,8 +15,6 @@ class Canvas{
         shared_ptr<jeu> j;
         shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> ptrPlateau;
 
-
-        
     public:
         Canvas(shared_ptr<jeu> j):j(j){};
 
@@ -26,7 +24,8 @@ class Canvas{
 
 /*--------------------------------------------------
 
-AfficherScoreAndNb_coups class.
+Classe AfficherScoreAndNb_coups. Affiche le score, le meilleur score et le
+nombre de coups restants
 
 --------------------------------------------------*/
 
@@ -37,20 +36,22 @@ class AfficherScoreAndNb_coups{
 
     public:
         AfficherScoreAndNb_coups(shared_ptr<jeu> j):j(j){};
+
         void draw();
 };
 
 
 /*--------------------------------------------------
 
-Menu class.
+Classe Menu. Affiche des informations sur le jeu et comment jouer ainsi que les 
+affichages quand il n'y a pas de coup possible et quand le niveau est terminé.
 
 --------------------------------------------------*/
 
 class Menu{
     private:
         shared_ptr<jeu> j;
-        TextRectangle niv{{200, 15}, 20,20, "1", 20};
+        TextRectangle rectangle_info_niv{{200, 15}, 20,20, "1", 20};
         int time=0;
 
     public:
@@ -60,25 +61,25 @@ class Menu{
         void changeNiv();
         void AffichagePendantPartie();
 
-        int getniv(){
-            return stoi(niv.getString());
-        }
+        int getniv();
         
 };
 
 /*--------------------------------------------------
 
-EcranAccueil class.
+Class EcranAccueil. Pour afficher un court instant, au lancement du programme 
+un écran d'acceuille contenant mon nom et prénom ainsi que tous les éléments
+disponible dans le jeu. 
 
 --------------------------------------------------*/
 
 class EcranAccueil{
     private:
-        Glacage g{{3,5}, 45, 45};
+        Glacage g{{3,5}, 45, 45};// pour lui faire perdre une vie et afficher un glacage de rectangle_info_niv 1
     public:
-    EcranAccueil(){g.DoExplosion();};
+        EcranAccueil(){g.DoExplosion();};
 
-    void draw();
+        void draw();
 
 };
 

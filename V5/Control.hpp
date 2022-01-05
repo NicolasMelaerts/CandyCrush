@@ -4,44 +4,39 @@
 #include "Jeu.hpp"
 #include "Shapes.hpp"
 
+
+
 /*--------------------------------------------------
 
-ControlJeu class.
+Classe ControlJeu. Récupère les événements effectué sur la GUI tel que les mouvement 
+de la souris les clicks, le swapping de bonbons, les appuis sur des touches
+et va effectuer des changements dans le jeu via la classe jeu.
 
 --------------------------------------------------*/
-
-struct DoublePoint{
-    Point point1,point2;
-};
 
 
 class ControlJeu{
     private:
         shared_ptr<jeu> j;
-        vector<Point> ForDrag;
+        vector<Point> ForDrag; // coordonnée souris lors d'un swapping
         shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> ptrPlateau;
 
     public:
-        ControlJeu(shared_ptr<jeu> j):j(j){
-            ptrPlateau=j.get()->PtrPlateau();
-        };
+        ControlJeu(shared_ptr<jeu> j);
 
         void mouseMove(Point mouseLoc);
         void drag(Point mouseLoc);
         void mouseClick(Point mouseLoc);
-        void changeNiv(int niv){
-            j.get()->setGame(niv);
-        }
 
-        vector<Point> getForDrag(){
-            return ForDrag;
-        }
 
         void tentativeSwap();
         DoublePoint findBonbonToSwap(int idxForDrag);
         void SwapIfCoupPossible(Point p1, Point p2, Point idx1, Point idx2);
         void SwapBonbonAnim(Point p1, Point p2, Point idx1, Point idx2);
 
+        void changeNiv(int niv){
+            j.get()->setGame(niv);
+        }
 
         bool get_jeu_en_cours(){
             return j.get()->get_jeu_en_cours();
@@ -49,6 +44,10 @@ class ControlJeu{
 
         void reset_meilleur_score(){
             j.get()->reset_meilleur_score();
+        }
+
+        vector<Point> getForDrag(){
+            return ForDrag;
         }
 };
 

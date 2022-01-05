@@ -3,7 +3,7 @@
 
 /*--------------------------------------------------
 
-Rectangle class
+Classe Rectangle reprise des TPs
 
 --------------------------------------------------*/
 
@@ -41,7 +41,7 @@ bool Rectangle::contains(Point p) {
 
 /*--------------------------------------------------
 
-Circle class
+Classe Circle reprise des TPs
 
 --------------------------------------------------*/
 
