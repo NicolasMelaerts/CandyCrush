@@ -19,7 +19,7 @@ using namespace std;
 
 
 class MainWindow : public Fl_Window {
-    EcranAccueil e{};
+    EcranAccueil e;
     int time=0;
 
     shared_ptr<jeu> j = make_shared<jeu>(1);
@@ -42,9 +42,9 @@ class MainWindow : public Fl_Window {
             ++time;
         }
         else{
-        canvas.draw();
-        m.draw();
-        sAndc.draw();
+            canvas.draw();
+            m.draw();
+            sAndc.draw();
         }    
     }
     int handle(int event) override {

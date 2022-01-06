@@ -113,7 +113,7 @@ void jeu::ExploseLigne(int l){
         // si bonbon ou bonobons spécial
         if (E[l][i].get()->getMyId()<0 or (E[l][i].get()->getMyId()>0 and E[l][i].get()->getMyId()<7)){
             to_explose.push_back({l,i});
-            c.augmente_score(niv, 100);
+            c.augmente_score(niv, 500);
             plateau[l][i] = -20;
         }
     }
@@ -130,7 +130,7 @@ void jeu::ExploseColonne(int col){
         // si bonbon ou bonobons spécial
         if (E[i][col].get()->getMyId()<0 or (E[i][col].get()->getMyId()>0 and E[i][col].get()->getMyId()<7)){
             to_explose.push_back({i,col});
-            c.augmente_score(niv, 100);
+            c.augmente_score(niv, 500);
             plateau[i][col] = -20;
         }
 
@@ -150,11 +150,13 @@ void jeu::ExploseBBspecialRond(Point empl){
             to_explose.push_back({empl.x+1, empl.y});
             to_explose.push_back({empl.x+1, empl.y+1});
             to_explose.push_back({empl.x, empl.y+1});
+            c.augmente_score(niv, 500);
         }
         if (empl.y == 8){
             to_explose.push_back({empl.x, empl.y-1});
             to_explose.push_back({empl.x+1, empl.y-1});
             to_explose.push_back({empl.x+1, empl.y});
+            c.augmente_score(niv, 500);
         }
         else{
             to_explose.push_back({empl.x, empl.y-1});
@@ -162,6 +164,7 @@ void jeu::ExploseBBspecialRond(Point empl){
             to_explose.push_back({empl.x+1, empl.y-1});
             to_explose.push_back({empl.x+1, empl.y});
             to_explose.push_back({empl.x+1, empl.y+1});
+            c.augmente_score(niv, 500);
         }
     }
 
@@ -170,11 +173,13 @@ void jeu::ExploseBBspecialRond(Point empl){
             to_explose.push_back({empl.x-1, empl.y});
             to_explose.push_back({empl.x-1, empl.y+1});
             to_explose.push_back({empl.x, empl.y+1});
+            c.augmente_score(niv, 500);
         }
         if (empl.y == 8){
             to_explose.push_back({empl.x, empl.y-1});
             to_explose.push_back({empl.x-1, empl.y-1});
             to_explose.push_back({empl.x-1, empl.y});
+            c.augmente_score(niv, 500);
         }
         else{
             to_explose.push_back({empl.x, empl.y-1});
@@ -182,6 +187,7 @@ void jeu::ExploseBBspecialRond(Point empl){
             to_explose.push_back({empl.x-1, empl.y-1});
             to_explose.push_back({empl.x-1, empl.y});
             to_explose.push_back({empl.x-1, empl.y+1});
+            c.augmente_score(niv, 500);
         }
     }
 
@@ -191,6 +197,7 @@ void jeu::ExploseBBspecialRond(Point empl){
         to_explose.push_back({empl.x, empl.y+1});
         to_explose.push_back({empl.x+1, empl.y+1});
         to_explose.push_back({empl.x+1, empl.y});
+        c.augmente_score(niv, 500);
     }
 
     else if (empl.y == 8 && empl.x != 0 and empl.x != 8){
@@ -199,6 +206,7 @@ void jeu::ExploseBBspecialRond(Point empl){
         to_explose.push_back({empl.x, empl.y-1});
         to_explose.push_back({empl.x+1, empl.y-1});
         to_explose.push_back({empl.x+1, empl.y});
+        c.augmente_score(niv, 500);
     }
 
     // cas normal pas sur les bords
@@ -211,6 +219,7 @@ void jeu::ExploseBBspecialRond(Point empl){
         to_explose.push_back({empl.x+1, empl.y+1});
         to_explose.push_back({empl.x+1, empl.y});
         to_explose.push_back({empl.x+1, empl.y-1});
+        c.augmente_score(niv, 500);
     }
 
     for (auto &b: to_explose){
@@ -282,7 +291,7 @@ void jeu::DoExploseGlacage(){
                 if (plateau[i+1][k] == -20 or plateau[i-1][k] == -20 or plateau[i][k+1] == -20 or plateau[i][k-1] == -20){
                     if (E[i][k].get()->getMyId() == 20){
                         E[i][k].get()->DoExplosion();   // glacage niv 2 devient glacage de niv 1
-                        c.augmente_score(niv, 150);
+                        c.augmente_score(niv, 250);
                     }
                     else{
                         // glacage de niv 1 disparait
@@ -307,7 +316,7 @@ void jeu::check_ingredient(){
                 if (i==8){  // tout en bas du plateau
                     plateau[i][k] = -20;
                     E[i][k].get()->setPosPlat({1000,1000});
-                    c.augmente_score(niv, 300);
+                    c.augmente_score(niv, 1000);
                 }
             }
         }
@@ -506,7 +515,7 @@ void jeu::init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E){
 
 
 void jeu::search_combinaison(){
-    cout << "SEARCH_COMBI" << endl;
+
     // vérif toutes les combinaisons possibles
     check_5bonbons();
     check_4bonbons();

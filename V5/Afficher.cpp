@@ -49,7 +49,7 @@ void Menu::draw(){
     Text("Appuie sur 'q' pour quitter", {250, 560}, 20).draw();
     
 
-    rectangle_info_niv.draw();
+    info_niv.draw();
 
     AffichagePendantPartie();
 }
@@ -72,11 +72,17 @@ void Menu::AffichagePendantPartie(){
 }
 
 void Menu::changeNiv(){
-    rectangle_info_niv.setNiveau();
+    int niv = stoi(info_niv.getString());
+    if (niv<5){
+        info_niv.setString(to_string(niv+1));
+    }
+    else {
+        info_niv.setString(to_string(1));
+    }
 }
 
 int Menu::getniv(){
-    return stoi(rectangle_info_niv.getString());
+    return stoi(info_niv.getString());
 }
 
 

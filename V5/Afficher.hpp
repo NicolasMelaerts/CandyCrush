@@ -51,7 +51,7 @@ affichages quand il n'y a pas de coup possible et quand le niveau est terminé.
 class Menu{
     private:
         shared_ptr<jeu> j;
-        TextRectangle rectangle_info_niv{{200, 15}, 20,20, "1", 20};
+        Text info_niv{"1", {200, 15}, 20, FL_BLACK};
         int time=0;
 
     public:

@@ -17,9 +17,6 @@ class Text {
   //Constructor
   Text(string s, Point center, int fontSize = 10, Fl_Color color = FL_BLACK);
 
-  //Draw
-  void draw();
-
   //Setters and getters
   string getString() {
     return s;
@@ -39,6 +36,9 @@ class Text {
   void setCenter(Point newCenter) {
     center = newCenter;
   }
+
+  // méthodes
+  void draw();
 };
 
 /*--------------------------------------------------
@@ -53,9 +53,8 @@ class TextRectangle: public Text, public Rectangle {
  public:
   TextRectangle(Point center, int w, int h, string text, int fontSize = 10);
 
+  // méthodes
   void draw();
-  void setNiveau();
-
 };
 
 #endif

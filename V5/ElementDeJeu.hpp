@@ -21,14 +21,16 @@ class ElementDeJeu{
     public:
         Animation *animation;
 
+        // constructeur
         ElementDeJeu(Point posPlat, Fl_Color couleur);
 
-
+        // getter and setter
         Point getPoint();
         Point getposPlat();
         void setPosPlat(Point newPosPlat);
         void setCouleur(Fl_Color newc);
 
+        // méthode
         virtual void draw()=0;
         virtual void drawWithoutAnimate()=0;
         virtual int getMyId()=0;
@@ -40,7 +42,6 @@ class ElementDeJeu{
         virtual void ElementMove(int sens)=0;
         virtual bool animation_is_complete()=0;
         
-        virtual ~ElementDeJeu(){}
 };
 
 

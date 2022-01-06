@@ -35,13 +35,3 @@ void TextRectangle::draw(){
     Text::draw();
   }
 
-// pour afficher le niv et le changer
-void TextRectangle::setNiveau(){
-  int niv = stoi(Text::getString());
-  if (niv<5){
-    Text::setString(to_string(niv+1));
-  }
-  else {
-    Text::setString(to_string(1));
-  }
-}

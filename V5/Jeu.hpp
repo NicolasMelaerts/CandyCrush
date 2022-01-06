@@ -102,6 +102,8 @@ public:
         c.write_meilleur_score(niv, 0);
     }
 
+
+    //méthodes
     void init_plateau(vector< vector<shared_ptr<ElementDeJeu>> > E);
 
     void search_combinaison();
