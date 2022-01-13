@@ -51,7 +51,7 @@ void Menu::draw(){
 
     info_niv.draw();
 
-    AffichagePendantPartie();
+    AffichagePendantPartie();   // aucune combinaison possible ou fin de partie
 }
 
 void Menu::AffichagePendantPartie(){
@@ -66,14 +66,15 @@ void Menu::AffichagePendantPartie(){
         j.get()->set_aucun_coup_poss(0);
     }
     if (!j.get()->jeu_possible()){
-        Text("FINI, CHANGE DE NIV AVEC ESPACE", {250, 580}, 25, FL_RED).draw();
+        Text("FINI, CHANGE DE NIV AVEC ESPACE", {250, 580}, 25, FL_RED).draw();     // fin de partie
     }
 
 }
 
 void Menu::changeNiv(){
     int niv = stoi(info_niv.getString());
-    if (niv<6){
+    // niv 1 à 5
+    if (niv<5){
         info_niv.setString(to_string(niv+1));
     }
     else {

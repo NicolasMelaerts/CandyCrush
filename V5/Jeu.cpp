@@ -90,6 +90,8 @@ void jeu::ouvertureInfo(int niv){
         string inf;
         int i = 0;
         while(Info >> inf){
+            // ligne 1 le meilleur score
+            // ligne 2 le nombre de coups pour le niveau
             if (i==0)
                 c.set_meilleur_score(stoi(inf));
             if (i==1)

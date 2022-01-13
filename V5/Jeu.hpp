@@ -125,9 +125,9 @@ public:
     vector<Point> setToExplose();
     void DoExplose(vector<Point> to_explose);
     void Explose(vector<Point> to_explose);
-    void ExploseLigne(int l);
-    void ExploseColonne(int c);
-    void ExploseBBspecialRond(Point empl);
+    void ExploseLigne(int l);   // bonbon spécial horizontal
+    void ExploseColonne(int c);     // bonbon spécial vertical
+    void ExploseBBspecialRond(Point empl);  // bonbon spécial rond (emballé)
     void DoExploseGlacage();
     void check_ingredient();
 

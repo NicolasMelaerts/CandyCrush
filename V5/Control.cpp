@@ -8,7 +8,7 @@ ControlJeu class.
 
 ControlJeu::ControlJeu(shared_ptr<jeu> j):j(j){
             ptrPlateauE=j.get()->getPtrPlateau();
-        };
+};
 
  // pour changer les contours d'un élément de jeu si la souris est sur celui-ci
 void ControlJeu::mouseMove(Point mouseLoc){

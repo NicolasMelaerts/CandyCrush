@@ -24,31 +24,31 @@ class ControlJeu{
     public:
         ControlJeu(shared_ptr<jeu> j);
 
+        // getter and setter
+        void changeNiv(int niv){
+            j.get()->setGame(niv);
+        }
+        bool get_jeu_en_cours(){
+            return j.get()->get_jeu_en_cours();
+        }
+        void reset_meilleur_score(){
+            j.get()->reset_meilleur_score();
+        }
+        vector<Point> getForDrag(){
+            return ForDrag;
+        }
+
+
+        // methodes
         void mouseMove(Point mouseLoc);
         void drag(Point mouseLoc);
         void mouseClick(Point mouseLoc);
-
 
         void tentativeSwap();
         DoublePoint findBonbonToSwap(int idxForDrag);
         void SwapIfCoupPossible(Point p1, Point p2, Point idx1, Point idx2);
         void SwapBonbonAnim(Point p1, Point p2, Point idx1, Point idx2);
 
-        void changeNiv(int niv){
-            j.get()->setGame(niv);
-        }
-
-        bool get_jeu_en_cours(){
-            return j.get()->get_jeu_en_cours();
-        }
-
-        void reset_meilleur_score(){
-            j.get()->reset_meilleur_score();
-        }
-
-        vector<Point> getForDrag(){
-            return ForDrag;
-        }
 };
 
 #endif
