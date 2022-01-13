@@ -8,6 +8,7 @@ Animation class.
 
 
 void Animation::draw() {
+  // vitesse de l'animation
   for (int k=0; k<5; k++)
     ++time;
   Translation t3{MoveElementDeJeu()};

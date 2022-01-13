@@ -75,7 +75,7 @@ void Bonbon::mouseClick(Point mouseLoc){
 
 void Bonbon::mouseMove(Point mouseLoc){
     if (r.contains(mouseLoc)){
-      // pour mieux visualisé les contour d'un bonbon sélectionné
+      // pour mieux visualisé les contours d'un bonbon sélectionné
       if (r.getFillColor() == 88 or r.getFillColor() == 216 or r.getFillColor() == 248){
         r.setFrameColor(FL_WHITE);
       } else{
@@ -159,7 +159,7 @@ void BonbonSpecialRond::mouseClick(Point mouseLoc){
 
 void BonbonSpecialRond::mouseMove(Point mouseLoc){
     if (c.contains(mouseLoc)){
-      // pour mieux visualisé les contour d'un bonbon sélectionné
+      // pour mieux visualisé les contours d'un bonbon sélectionné
       if (c.getFillColor() == 88 or c.getFillColor() == 216 or c.getFillColor() == 248 or c.getFillColor()==FL_BLACK){
         c.setFrameColor(FL_WHITE);
       } else{
@@ -186,7 +186,7 @@ Point BonbonSpecialRond::getPosPlatifcontain(Point coord){
 }
 
 void BonbonSpecialRond::DoExplosion(){
-  // ne fait rien 
+  EXIT_SUCCESS;
 }
 
 bool BonbonSpecialRond::animation_is_complete(){
@@ -219,9 +219,11 @@ Fl_Color Mur::getcouleur(){
 }
 
 void Mur::mouseClick(Point mousLoc){
+  EXIT_SUCCESS;
 }
 
 void Mur::mouseMove(Point mouseLoc){
+  EXIT_SUCCESS;
 }
 
 Point Mur::getPosPlatifcontain(Point coord){

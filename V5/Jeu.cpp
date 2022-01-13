@@ -110,7 +110,7 @@ void jeu::ExploseLigne(int l){
     vector <Point> to_explose;
 
     for (int i = 0; i<9;i++){
-        // si bonbon ou bonobons spécial
+        // si bonbon ou bonbons spécial
         if (E[l][i].get()->getMyId()<0 or (E[l][i].get()->getMyId()>0 and E[l][i].get()->getMyId()<7)){
             to_explose.push_back({l,i});
             c.augmente_score(niv, 500);
@@ -127,7 +127,7 @@ void jeu::ExploseColonne(int col){
     vector <Point> to_explose;
 
     for (int i = 0; i<9;i++){
-        // si bonbon ou bonobons spécial
+        // si bonbon ou bonbons spécial
         if (E[i][col].get()->getMyId()<0 or (E[i][col].get()->getMyId()>0 and E[i][col].get()->getMyId()<7)){
             to_explose.push_back({i,col});
             c.augmente_score(niv, 500);
@@ -497,8 +497,6 @@ void jeu::check_L(){
             }
         }
     }
-    cout << "check L fin" << endl;
-    afficher_plateau_de_jeu();
 }
 
 
@@ -752,6 +750,7 @@ bool jeu::coup_possible(Point a, Point b){
 }
 
 // attendre que les animations de tout les éléments de jeu de E soient terminées
+// Crédit : Deroubaix Emile
 void jeu::wait_anim(){
     bool anim_en_cours=true;
     while (anim_en_cours){

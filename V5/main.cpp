@@ -17,17 +17,19 @@ But du programme : Jeu inspiré de Candy Crush Saga
 using namespace std;
 
 
-
 class MainWindow : public Fl_Window {
     EcranAccueil e;
     int time=0;
 
+    // Modèle 
     shared_ptr<jeu> j = make_shared<jeu>(1);
     
+    // Vue
     Canvas canvas{j};
     AfficherScoreAndNb_coups sAndc{j};
     Menu m{j};
 
+    // Contrôleur
     ControlJeu controljeu{j};
 
     public:
@@ -49,12 +51,14 @@ class MainWindow : public Fl_Window {
     }
     int handle(int event) override {
         switch (event) {
-            case FL_RELEASE:
+            case FL_RELEASE:    // relacher clic
                 if (controljeu.getForDrag().size()>1)
                     controljeu.tentativeSwap();
+
             case FL_MOVE:
                 controljeu.mouseMove(Point{Fl::event_x(),Fl::event_y()});
                 return 1;
+
             case FL_KEYDOWN:
                 if (Fl::event_key() == 'r'){
                     controljeu.reset_meilleur_score();
@@ -66,8 +70,9 @@ class MainWindow : public Fl_Window {
                 }
                 if (Fl::event_key()=='q'){exit(0);}
 
-            case FL_DRAG:
+            case FL_DRAG:   // pour tenter de swap des bonbons
                 controljeu.drag(Point{Fl::event_x(),Fl::event_y()});
+
             case FL_PUSH:
                 return 1;
         }   

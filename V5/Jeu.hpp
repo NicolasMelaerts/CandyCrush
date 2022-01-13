@@ -12,6 +12,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <algorithm>
+#include <memory>
 
 #include "ElementDeJeu.hpp"
 #include "Score.hpp"

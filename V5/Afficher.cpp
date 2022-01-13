@@ -7,11 +7,11 @@ Canvas class.
 --------------------------------------------------*/
 
 void Canvas::draw(){
-    ptrPlateau=j.get()->getPtrPlateau();
+    ptrPlateauE=j.get()->getPtrPlateau();
 
     for (int i=0; i<9; i++){
         for (int j=0; j<9; j++){
-            ptrPlateau.get()->at(i).at(j).get()->draw();    // dessine tous les éléments du plateau
+            ptrPlateauE.get()->at(i).at(j).get()->draw();    // dessine tous les éléments du plateau
         }
     }
 }
@@ -73,7 +73,7 @@ void Menu::AffichagePendantPartie(){
 
 void Menu::changeNiv(){
     int niv = stoi(info_niv.getString());
-    if (niv<5){
+    if (niv<6){
         info_niv.setString(to_string(niv+1));
     }
     else {
@@ -92,7 +92,7 @@ EcranAccueil class.
 
 --------------------------------------------------*/
 
-
+// Dessine tout les éléments de jeu pour les présenter au joueur
 void EcranAccueil::draw(){
         Text("Projet candy crush par Nicolas Melaerts", {180,30},20).draw();
         Text("Langages de programmation 2", {140,60},20).draw();

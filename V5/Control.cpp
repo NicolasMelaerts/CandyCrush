@@ -7,17 +7,15 @@ ControlJeu class.
 --------------------------------------------------*/
 
 ControlJeu::ControlJeu(shared_ptr<jeu> j):j(j){
-            ptrPlateau=j.get()->getPtrPlateau();
+            ptrPlateauE=j.get()->getPtrPlateau();
         };
 
-
+ // pour changer les contours d'un élément de jeu si la souris est sur celui-ci
 void ControlJeu::mouseMove(Point mouseLoc){
-    // pour changer les contours d'un élément de jeu si la souris est sur celui-ci
-
-    ptrPlateau=j.get()->getPtrPlateau();
+    ptrPlateauE=j.get()->getPtrPlateau();
     for (int i=0; i<9; i++){
         for (int j=0; j<9; j++){
-            ptrPlateau.get()->at(i).at(j).get()->mouseMove(mouseLoc);
+            ptrPlateauE.get()->at(i).at(j).get()->mouseMove(mouseLoc);
         }
     }
 }
@@ -28,6 +26,7 @@ void ControlJeu::drag(Point mouseLoc){
 
 
 void ControlJeu::mouseClick(Point mouseLoc){
+    EXIT_SUCCESS;
 }
 
 
@@ -40,7 +39,7 @@ DoublePoint ControlJeu::findBonbonToSwap(int idxForDrag){
 
     for (int i =0; i<9; i++){
         for (int j =0; j<9; j++){
-            p = ptrPlateau.get()->at(i).at(j).get()->getPosPlatifcontain(ForDrag[idxForDrag]);
+            p = ptrPlateauE.get()->at(i).at(j).get()->getPosPlatifcontain(ForDrag[idxForDrag]);
             idx = {i,j};
             if (p.x != -1){
                 stop = true;
@@ -61,20 +60,20 @@ void ControlJeu::SwapBonbonAnim(Point p1_debut, Point p1_fin, Point p2_debut, Po
     j.get()->set_jeu_est_en_cours(1);
 
     if (p1_debut.x == p1_fin.x && p1_debut.y == p1_fin.y+1){
-        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(3);  //gauche 
-        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(2);  //droite
+        ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(3);  //gauche 
+        ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(2);  //droite
     }
     if (p1_debut.x == p1_fin.x && p1_debut.y == p1_fin.y-1){
-        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(2); // droite
-        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(3);  //gauche
+        ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(2); // droite
+        ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(3);  //gauche
     }
     if (p1_debut.x == p1_fin.x+1 && p1_debut.y == p1_fin.y){
-        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(1);  // haut
-        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(0);  // bas 
+        ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(1);  // haut
+        ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(0);  // bas 
     }
     if (p1_debut.x == p1_fin.x-1 && p1_debut.y == p1_fin.y){
-        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(0);  // bas 
-        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(1);  //haut
+        ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->ElementMove(0);  // bas 
+        ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->ElementMove(1);  //haut
     }
                     
     j.get()->wait_anim();
@@ -86,20 +85,20 @@ void ControlJeu::SwapIfCoupPossible(Point p1_debut, Point p1_fin, Point p2_debut
     // vérifie si le swap voulu par l'utilisateur est possible 
     // si c'est un swap entre un bonbon et un cookie c'est toujours possible
 
-    ptrPlateau = j.get()->getPtrPlateau();
+    ptrPlateauE = j.get()->getPtrPlateau();
 
-    if (j.get()->coup_possible({p1_debut.x, p1_debut.y}, {p1_fin.x, p1_fin.y}) or ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId()== -19 or ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId()==-19){
+    if (j.get()->coup_possible({p1_debut.x, p1_debut.y}, {p1_fin.x, p1_fin.y}) or ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId()== -19 or ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId()==-19){
 
-        ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->setPosPlat(p1_fin);
-        ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->setPosPlat(p1_debut);
+        ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->setPosPlat(p1_fin);
+        ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->setPosPlat(p1_debut);
 
         j.get()->echange({p2_debut.x,p2_debut.y},{p2_fin.x,p2_fin.y});
                         
-        if (ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId()== -19){
-            j.get()->coup_cookie(ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId(), p2_fin);
+        if (ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId()== -19){
+            j.get()->coup_cookie(ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId(), p2_fin);
         }
-        if (ptrPlateau.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId()==-19){
-            j.get()->coup_cookie(ptrPlateau.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId(), p2_debut);
+        if (ptrPlateauE.get()->at(p2_fin.x).at(p2_fin.y).get()->getMyId()==-19){
+            j.get()->coup_cookie(ptrPlateauE.get()->at(p2_debut.x).at(p2_debut.y).get()->getMyId(), p2_debut);
         }
 
 
@@ -112,7 +111,7 @@ void ControlJeu::SwapIfCoupPossible(Point p1_debut, Point p1_fin, Point p2_debut
 
 void ControlJeu::tentativeSwap(){
     if (j.get()->jeu_possible() and !j.get()->get_jeu_en_cours()){
-        ptrPlateau=j.get()->getPtrPlateau();
+        ptrPlateauE=j.get()->getPtrPlateau();
 
         DoublePoint debut{findBonbonToSwap(0)};
         DoublePoint fin{findBonbonToSwap(ForDrag.size()-1)};
@@ -131,6 +130,6 @@ void ControlJeu::tentativeSwap(){
             j.get()->set_jeu_est_en_cours(0);
             
     }
-    ForDrag.clear();
+    ForDrag.clear(); // vide pour attendre nouvelle tentative swap
 }
 

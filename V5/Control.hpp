@@ -8,8 +8,8 @@
 
 /*--------------------------------------------------
 
-Classe ControlJeu. Récupère les événements effectué sur la GUI tel que les mouvement 
-de la souris les clicks, le swapping de bonbons, les appuis sur des touches
+Classe ControlJeu. Récupère les événements effectués sur la GUI tel que les mouvements 
+de la souris les clics, le swapping de bonbons, les appuis sur des touches
 et va effectuer des changements dans le jeu via la classe jeu.
 
 --------------------------------------------------*/
@@ -19,7 +19,7 @@ class ControlJeu{
     private:
         shared_ptr<jeu> j;
         vector<Point> ForDrag; // coordonnée souris lors d'un swapping
-        shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> ptrPlateau;
+        shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> ptrPlateauE;
 
     public:
         ControlJeu(shared_ptr<jeu> j);

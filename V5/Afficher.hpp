@@ -13,11 +13,12 @@ Classe Canvas. Affiche le plateau de jeu
 class Canvas{
     private:
         shared_ptr<jeu> j;
-        shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> ptrPlateau;
+        shared_ptr<vector< vector<shared_ptr<ElementDeJeu>> >> ptrPlateauE;
 
     public:
         Canvas(shared_ptr<jeu> j):j(j){};
 
+        // methode
         void draw();
 };
 
@@ -37,6 +38,7 @@ class AfficherScoreAndNb_coups{
     public:
         AfficherScoreAndNb_coups(shared_ptr<jeu> j):j(j){};
 
+        // methode
         void draw();
 };
 
@@ -79,6 +81,7 @@ class EcranAccueil{
     public:
         EcranAccueil(){g.DoExplosion();};
 
+        // methode
         void draw();
 
 };

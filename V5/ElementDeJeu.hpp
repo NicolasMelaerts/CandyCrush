@@ -30,7 +30,7 @@ class ElementDeJeu{
         void setPosPlat(Point newPosPlat);
         void setCouleur(Fl_Color newc);
 
-        // méthode
+        // méthodes
         virtual void draw()=0;
         virtual void drawWithoutAnimate()=0;
         virtual int getMyId()=0;
@@ -118,7 +118,7 @@ class Mur: public ElementDeJeu{
         void mouseMove(Point mouseLoc) override;
         Point getPosPlatifcontain(Point coord) override;
         void DoExplosion() override;
-        void ElementMove(int sens) override{};
+        void ElementMove(int sens) override{EXIT_SUCCESS;};
         bool animation_is_complete()override;
 
 };
@@ -139,13 +139,13 @@ class Glacage: public ElementDeJeu{
 
         int getMyId() override;
         void draw() override;
-        void drawWithoutAnimate() override{};
+        void drawWithoutAnimate() override{EXIT_SUCCESS;};
         Fl_Color getcouleur()override;
-        void mouseClick(Point mouseLoc) override{};
-        void mouseMove(Point mouseLoc) override{};
+        void mouseClick(Point mouseLoc) override{EXIT_SUCCESS;};
+        void mouseMove(Point mouseLoc) override{EXIT_SUCCESS;};
         Point getPosPlatifcontain(Point coord) override{return {-1,-1};};
         void DoExplosion() override;
-        void ElementMove(int sens) override{};
+        void ElementMove(int sens) override{EXIT_SUCCESS;};
         bool animation_is_complete()override{return EXIT_SUCCESS;};
 
         int getVie(){
@@ -243,7 +243,7 @@ class Ingredient: public ElementDeJeu{
     void mouseClick(Point mouseLoc) override;
     void mouseMove(Point mouseLoc) override;
     Point getPosPlatifcontain(Point coord) override;
-    void DoExplosion() override{};
+    void DoExplosion() override{EXIT_SUCCESS;};
     void ElementMove(int sens) override;
     bool animation_is_complete()override;
 
