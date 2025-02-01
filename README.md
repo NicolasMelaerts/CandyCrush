@@ -62,6 +62,7 @@ Pour compiler et lancer le projet, il suffit d'exécuter la commande suivante da
 
 ```bash
 make
+```
 
 ## Capture d'écran du jeu :
 ![screenshot](jeu_img.png)
